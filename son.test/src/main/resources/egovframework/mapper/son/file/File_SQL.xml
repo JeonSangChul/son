@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="son.file.dao.FileMapper">
+
+    <select id="selectFileInfo" parameterType="paramMap" resultType="egovMap">
+        <![CDATA[
+        	SELECT t2.img_id
+        		  ,t2.img_srno
+        		  ,t2.origin_file_name
+        		  ,t2.stored_file_name
+        		  ,t2.file_size
+        		  ,t2.file_path
+        		  ,t2.file_extsn
+        	  FROM board_image t1
+        	      ,board_image_detail t2
+        	 WHERE 1=1
+        	   AND t1.img_id = t2.img_id
+        	   and t1.img_id = #{imgId}
+        	   AND t2.img_srno = #{imgSrno}
+        ]]>
+    </select>
+</mapper>

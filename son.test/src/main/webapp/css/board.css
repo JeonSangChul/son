@@ -1,0 +1,73 @@
+@charset "utf-8";
+/* CSS Document */
+
+.table-users {
+  color:#4a4a4a;
+  line-height: 1.5;
+  max-width: 1000px;
+}
+
+table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-collapse: separate;
+  border-spacing: 1;
+}
+table td, table th {
+  padding: 10px;
+}
+table td {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-right : 1px solid #eee;
+  border-bottom : 1px solid #e6e6e6;
+}
+table th {
+	border-left-color: #ddd;
+	border-bottom-color: #ddd;
+	border:0;
+	border-bottom: 1px solid #ddd;
+	border-right:1px solid #ddd;
+	background:#fcfcfc;
+}
+table tr:nth-child(2n) {
+  background-color: #fdfdfd;
+}
+table tr:nth-child(2n+1) {
+}
+
+
+
+#paging {padding:0 0 0 0; text-align:center; width:1000px; margin-top: 12px;}
+#paging ul {display:inline;}
+#paging li {display:inline; list-style-type:none; padding:0 10px 0 10px; font-family: Tahoma; font-size:11px; color: #333333;}
+#paging li.pre10 {padding:0 2px 0 2px;}
+#paging li.pre1 {padding:0 2px 0 2px;}
+#paging li.next10 {padding:0 2px 0 2px;}
+#paging li.next1 {padding:0 2px 0 2px;}
+#paging li.line {background:url(/images/board/paging_line.gif) 0 2px no-repeat;}
+#paging li.first {padding:0 5px 0 0;}
+#paging li.last {background:url(/images/board/paging_line.gif) 0 2px no-repeat; padding:0 5px 0 0;}
+
+
+.board_button{
+	margin-top: 12px;
+}
+
+.board_right_button{
+	float: right;
+}
+
+.btn_blue{ 
+	background: #5180b7;
+	width: 80px;
+	height: 35px;
+	line-height: 33px;
+	border-color: #2c5697;
+	border-radius:4px;
+	border-style: solid;
+	border-width: 1px;
+	color: #fff;
+	font-weight: bold;
+}

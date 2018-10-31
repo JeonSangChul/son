@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+ 
+<tiles-definitions>
+	<definition name="defaultLayout" template="/WEB-INF/jsp/son/common/layout/default-layouts.jsp">
+		<put-attribute name="header"    value="/WEB-INF/jsp/son/common/layout/header.jsp" />
+		<put-attribute name="content"   value="" />
+		<put-attribute name="footer"    value="/WEB-INF/jsp/son/common/layout/footer.jsp" />
+	</definition>
+	
+	<definition name="boardLayout" template="/WEB-INF/jsp/son/common/layout/board/board-layouts.jsp">
+		<put-attribute name="boardHeader"    value="/WEB-INF/jsp/son/common/layout/board/board-header.jsp" />
+		<put-attribute name="content"   value="" />
+		<put-attribute name="footer"    value="/WEB-INF/jsp/son/common/layout/footer.jsp" />
+	</definition>
+	
+	<definition name="popupLayout" template="/WEB-INF/jsp/son/common/layout/popup-layouts.jsp">
+	    <put-attribute name="popupHeader"    value="/WEB-INF/jsp/son/common/layout/popup-header.jsp" />
+		<put-attribute name="content"   value="" />
+	</definition>
+	
+	
+	<definition name="son/main/*" extends="defaultLayout">
+	    <put-attribute name="content" value="/WEB-INF/jsp/son/main/{1}.jsp" />
+	</definition>
+	
+	<definition name="son/board/*" extends="boardLayout">
+	    <put-attribute name="content" value="/WEB-INF/jsp/son/board/{1}.jsp" />
+	</definition>
+	
+	<definition name="son/board/popup/*" extends="popupLayout">
+	    <put-attribute name="content" value="/WEB-INF/jsp/son/board/popup/{1}.jsp" />
+	</definition>
+</tiles-definitions>
