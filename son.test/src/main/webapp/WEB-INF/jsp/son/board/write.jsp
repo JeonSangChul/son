@@ -102,8 +102,11 @@ function validForm(editor) {
 
 //validForm 함수까지 true값을 받으면 이어서 form submit을 시켜주는  setForm함수
 function setForm() {
+	if(!validForm(Editor)) return;
+	
 	var i, input;
 	var content = Editor.getContent();
+	
 	var fff = Editor.getForm();
 			
 	var _filedata = new Array();
@@ -126,19 +129,12 @@ function setForm() {
         	fileData.storedFileName = entry.data.storedName;
         	fileData.fileExtsn = entry.data.fileExtsn;
         	fileData.fileType = entry.type;
-       		/* szfileDatas += "&tempFileId="+entry.data.tempFileId;
-       		szfileDatas += "&filePath="+entry.data.filePath;
-       		szfileDatas += "&storedFileName="+entry.data.storedName;
-       		 */
        		if(entry.deletedMark == true){
        			fileData.delYn ="Y";
-        		//szfileDatas += "&delYn=Y";
         	}else if(entry.existStage == false){
         		fileData.delYn ="Y";
-        		//szfileDatas += "&delYn=Y";
         	}else{
         		fileData.delYn ="N";
-        		//szfileDatas += "&delYn=N";
         		nCount++;
         	}
         }
