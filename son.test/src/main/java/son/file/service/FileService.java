@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * 
@@ -26,7 +29,9 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 public interface FileService {
-
+	
+	public List<Map<String, Object>> multiImgUpload(MultipartHttpServletRequest multipartHttpServletRequest, HttpSession httpSession) throws Exception; 
+	
 	public Map<String, Object> selectFileInfo(Map<String, Object> paramMap) throws Exception;
 }
 

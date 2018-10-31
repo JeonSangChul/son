@@ -29,5 +29,14 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface FileMapper {
 
 	public Map<String, Object> selectFileInfo(Map<String, Object> paramMap) throws Exception;
+	
+	public void tempFileInsert(Map<String, Object> paramMap) throws Exception;
+	
+	public void fileInsert(Map<String, Object> paramMap) throws Exception;
+	
+	public void deleteTempFile(Map<String, Object> paramMap) throws Exception;
+	
+	public void insertFileDetail(Map<String, Object> paramMap) throws Exception;
+	
 
 }

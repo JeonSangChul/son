@@ -153,7 +153,7 @@
 	function del_file(em) {
 		if($(em).hasClass('template-download')) {
 			for(var i in _mockdata) {
-				if(_mockdata[i]['file_temp_no'] == $(em).find('.listDelip_img').attr('data-no')) {
+				if(_mockdata[i]['tempFileId'] == $(em).find('.listDelip_img').attr('data-no')) {
 					/*_mockdata.splice(i, 1);
 					if(_mockdata.length == 0) {
 						$('#upload_status').val('N');
@@ -250,41 +250,23 @@
 						file_cnt++;
 
 				%}
-                    {% if (1==2) { %}
-
-                          {%
-                            _mockdata[_mockdata.length]  = {
-                                'imageurl': file.web__url,
-                                'filename': file.name,
-								'filepath': file.filePath,
-                                'filesize': file.size,
-                                'imagealign': 'L',
-                                'originalurl': file.url,
-                                'thumburl': file._s_url,
-                                'file_temp_no': file.file_temp_no,
-								'storedName' : file.storedName
-                            };
-
-                            %}
-                        {% } else { %}
-
-                    {%
+                    {% 
                             _mockdata[_mockdata.length]  = {
                                 'imageurl': file.url,
-                                'filename': file.name,
+                                'filename': file.originFileName,
 								'filepath': file.filePath,
-                                'filesize': file.size,
+                                'filesize': file.fileSize,
                                 'imagealign': 'L',
                                 'originalurl': file.url,
                                 'thumburl': file._s_url,
-                                'file_temp_no': file.file_temp_no,
-								'storedName' : file.storedName
+                                'tempFileId': file.tempFileId,
+								'storedName' : file.storedFileName,
+								'fileExtsn' : file.fileExtsn
                             };
-                        }
                     %}
                     <li class="template-download fade" data-key = {%=file_cnt%}>
 						{% if (file._s_url) { %}
-							<img class="listDelip_img" data-no="{%=file.file_temp_no%}" src="{%=file._s_url%}">
+							<img class="listDelip_img" data-no="{%=file.tempFileId%}" src="{%=file._s_url%}">
 							<button type="button" onclick = "del_file(this)"><span class="blind">이미지 삭제</span><em class="sp_img icon_imgup_del"></em></button>
 						{% } %}
                     </li>

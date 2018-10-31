@@ -8,10 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,11 +31,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import son.board.service.BoardService;
-import son.file.service.FileService;
 import egovframework.com.cmm.util.EgovBasicLogger;
 import egovframework.com.cmm.util.EgovResourceCloseHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import son.board.service.BoardService;
+import son.file.service.FileService;
 
 @Controller
 public class FileController {
@@ -137,56 +135,12 @@ public class FileController {
 	public Map<String, Object> multiImgUpload(ModelMap model
 									, MultipartHttpServletRequest multipartHttpServletRequest
 									, HttpSession httpSession) throws Exception{
-		Map<String, Object> filesMap = new HashMap<String, Object>();
-		List<Map<String, Object>> fileMap = new ArrayList<Map<String, Object>>();
-		Iterator<String> itr = multipartHttpServletRequest.getFileNames();
-		MultipartFile attch;
-		while (itr.hasNext()) {
-			
-			attch = multipartHttpServletRequest.getFile(itr.next());
-			Map<String, Object> fileInfo = new HashMap<String, Object>(); 
-			String originalName = attch.getOriginalFilename();
-			String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
-			
-			
-			long filesize = attch.getSize(); // 파일크기 
-			long limitFileSize = 1*1024*1024; // 1MB 
-			
-			String path = propertiesService.getString("board.upload.image");
-			
-			File file = new File(path);
-			if(!file.exists()){
-				file.mkdir();
-			}
-			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-			String today = formatter.format(new Date());
-			String modifyName = today +"-" + UUID.randomUUID().toString().substring(20)+"."+originalNameExtension;
-			
-			try{
-				attch.transferTo(new File(path+modifyName));
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-			//url filePath/fileName 으로 변경 할까?? url인코딩 필요할듯.
-			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView.do?fileName="+modifyName+"&filePath="+path;
-			
-			//파일 확장자 정보도 수정예쩡
-			fileInfo.put("url", imageurl);
-			fileInfo.put("name", originalName);
-			fileInfo.put("filePath", path);
-			fileInfo.put("size", filesize);
-			fileInfo.put("imagealign", "C");
-			fileInfo.put("_s_url", imageurl);
-			fileInfo.put("file_temp_no", 11);
-			fileInfo.put("storedName", modifyName);
-			fileInfo.put("result", 1);   
-			
-			fileMap.add(fileInfo);
-		}
-		filesMap.put("files", fileMap);
-		return filesMap;
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> fileList = fileService.multiImgUpload(multipartHttpServletRequest, httpSession);
+		
+		resultMap.put("files", fileList);
+		return resultMap;
 	}
 			
 	

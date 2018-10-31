@@ -40,10 +40,6 @@ public interface BoardMapper {
 	
 	public int boardInsert(Map<String, Object> paramMap) throws Exception;
 	
-	public void boardImgInsert(Map<String, Object> paramMap) throws Exception;
-	
-	public void boardImgDetailInsert(Map<String, Object> paramMap) throws Exception;
-	
 	public Map<String, Object> selectBoardDetail(Map<String, Object> paramMap) throws Exception;
 	
 	public List<Map<String, Object>> selectImgList(Map<String, Object> paramMap) throws Exception;

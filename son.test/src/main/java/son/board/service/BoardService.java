@@ -31,7 +31,7 @@ public interface BoardService {
 	
 	public int selectBoardListTotCnt(Map<String, Object> paramMap) throws Exception;
 	
-	public int boardInsert(Map<String, Object> paramMap, HttpServletRequest request) throws Exception;
+	public Map<String, Object> boardInsert(Map<String, Object> paramMap, HttpServletRequest request) throws Exception;
 	
 	public Map<String, Object> selectBoardDetail(Map<String, Object> paramMap) throws Exception;
 	

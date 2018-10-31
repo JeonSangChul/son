@@ -5,7 +5,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <link rel="stylesheet" href="/daumeditor/css/editor.css" type="text/css" charset="utf-8"/>
 <script src="/daumeditor/js/editor_loader.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.js"></script>
+<script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
             // 에디터UI load
@@ -68,7 +69,8 @@
 			 
 		 $("#save_button").click(function(){
 		        //다음에디터가 포함된 form submit
-		        Editor.save();
+		        //Editor.save();
+			 setForm();
 		    })
 	 });
     //form submit 버튼 클릭
@@ -78,6 +80,7 @@
 
 function validForm(editor) {
 
+    
     var validator = new Trex.Validator();
     var content = editor.getContent();
 	var title = $("#title").val();
@@ -98,57 +101,75 @@ function validForm(editor) {
 }
 
 //validForm 함수까지 true값을 받으면 이어서 form submit을 시켜주는  setForm함수
-function setForm(editor) {
+function setForm() {
 	var i, input;
-	var form = editor.getForm();
-	var content = editor.getContent();
-	
-	var textarea = document.createElement("textarea");
-	textarea.name = "content";
-	textarea.value = content;
-	form.createField(textarea);
-	
-	//이미지 첨부 있을경우 form 안에 이미지 정보를 담는 input box 생성후 담기..
-	//파일 첨부 있을경우도 추가 해야함... 
-	//확장자 정보도 추가 하까..?? 테이블에는 만들어둠..
-	//json 형태로 만들어서 input 필드 하나에 담는건?
-	var images = editor.getAttachments('image');
-    for (i = 0; i < images.length; i++) {
-        // existStage는 현재 본문에 존재하는지 여부
-        if (images[i].existStage) {
+	var content = Editor.getContent();
+	var fff = Editor.getForm();
+			
+	var _filedata = new Array();
+
+    var allAttachmentList = Editor.getAttachBox().datalist;
+    var nCount = 0;
+    var szfileDatas = "";
+    var data = {};
+    var fileItem = [];
+    
+    
+    for( var j=0, n=allAttachmentList.length; j<n; j++ ){
+        var entry = allAttachmentList[j];
+        var fileData = {};
+        if(entry.type == "file"){
         	
-        	alert('attachment information - image[' + i + '] \r\n' + JSON.stringify(images[i].data));
-        	
-            // data는 팝업에서 execAttach 등을 통해 넘긴 데이터
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'originFileName';
-            input.value = images[i].data.filename; 
-            form.createField(input);
-            
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'filePath';
-            input.value = images[i].data.filepath;  
-            form.createField(input);
-            
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'storedName';
-            input.value = images[i].data.storedName;  
-            form.createField(input);
-            
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'fileSize';
-            input.value = images[i].data.filesize;  
-            
-            form.createField(input);
-            
-            
+        }else if(entry.type == "image"){
+        	fileData.tempFileId = entry.data.tempFileId;
+        	fileData.filePath = entry.data.filepath;
+        	fileData.storedFileName = entry.data.storedName;
+        	fileData.fileExtsn = entry.data.fileExtsn;
+        	fileData.fileType = entry.type;
+       		/* szfileDatas += "&tempFileId="+entry.data.tempFileId;
+       		szfileDatas += "&filePath="+entry.data.filePath;
+       		szfileDatas += "&storedFileName="+entry.data.storedName;
+       		 */
+       		if(entry.deletedMark == true){
+       			fileData.delYn ="Y";
+        		//szfileDatas += "&delYn=Y";
+        	}else if(entry.existStage == false){
+        		fileData.delYn ="Y";
+        		//szfileDatas += "&delYn=Y";
+        	}else{
+        		fileData.delYn ="N";
+        		//szfileDatas += "&delYn=N";
+        		nCount++;
+        	}
         }
+        fileItem.push(fileData);
+        
     }
-    return true;
+    
+    data["fileData"] = JSON.stringify(fileItem);
+    
+    var frmData = $("#frm").serializeJSON();
+    frmData["content"] = encodeURIComponent(content);
+    frmData["count"] = nCount;
+    
+    data["frmData"] = "["+JSON.stringify(frmData)+"];";
+    
+    $.ajax({
+    	type:"POST",
+    	cache:false,
+    	async:false,
+    	url:"<c:url value='/son/board/save.do'/>",
+    	data:data,
+    	success : function(data) {
+    		location.href = "/son/board/detail.do?idx="+data.idx;
+    	},
+    	error: function(request,status,e){
+    		alert("code:"+request.status+"\n"+"messgae:"+request.responseText+"\n"+"error:"+e);
+    		//alert("업로드 중 오류가 발생하였습니다.");
+    		
+    		return false;
+    	}
+    });
 }
 
 
@@ -159,7 +180,7 @@ function setForm(editor) {
 	</div>
 	<div class="inputForm">
 	
-    <form name="frm" id="frm" action="/son/board/save.do" method="post" accept-charset="utf-8">
+    <form name="frm" id="frm" method="post" accept-charset="utf-8">
     <dl class="sec">
 		<dd><input type="text" class="inp" id="title" name="title" placeholder="제목을 입력해 주세요." /> </dd>
 	</dl>
@@ -176,4 +197,3 @@ function setForm(editor) {
 	</div>
 	</form>
 	</div>
-

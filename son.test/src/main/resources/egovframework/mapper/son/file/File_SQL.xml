@@ -19,4 +19,81 @@
         	   AND t2.img_srno = #{imgSrno}
         ]]>
     </select>
+    
+    <insert id="tempFileInsert" parameterType="paramMap">
+        <![CDATA[
+        	INSERT INTO temp_file
+        			( origin_file_name
+        			 ,stored_file_name
+        			 ,file_size
+        			 ,file_path
+        			 ,file_extsn
+        			 ,file_type
+        			)
+        		VALUES (  #{originFileName}
+        				 ,#{storedFileName}
+        				 ,#{fileSize}
+        				 ,#{filePath}
+        				 ,#{fileExtsn}
+        				 ,#{fileType}
+        			   )
+        ]]>
+        <selectKey keyProperty="tempFileId" resultType="Integer">
+            <![CDATA[
+            	SELECT LAST_INSERT_ID();
+            ]]>
+        </selectKey>
+    </insert>
+    
+    <insert id="fileInsert" parameterType="paramMap">
+        <![CDATA[
+        	INSERT INTO board_image
+        			( create_dt
+        			)
+        		VALUES (  now()
+        			   )
+        ]]>
+        <selectKey keyProperty="imgId" resultType="Integer">
+            <![CDATA[
+            	SELECT LAST_INSERT_ID();
+            ]]>
+        </selectKey>
+    </insert>
+    
+    <delete id="deleteTempFile" parameterType="paramMap">
+    	<![CDATA[
+    		DELETE FROM temp_file WHERE temp_file_id = #{tempFileId}
+    	]]>
+    </delete>
+    
+    <insert id="insertFileDetail" parameterType="paramMap">
+    	<selectKey keyProperty="imgSrno" resultType="Integer" order="BEFORE">
+            <![CDATA[
+            	(SELECT IFNULL(MAX(img_srno),0)+1 AS imgSrno FROM board_image_detail WHERE IMG_ID = #{imgId})
+            ]]>
+        </selectKey>
+        
+        <![CDATA[
+        	INSERT INTO board_image_detail
+        			( img_id
+        			 ,img_srno
+        			 ,origin_file_name
+        			 ,stored_file_name
+        			 ,file_size
+        			 ,file_path
+        			 ,file_extsn
+        			 ,file_type
+        			)
+        		SELECT #{imgId}
+        			 , #{imgSrno}
+        			 , origin_file_name
+        			 , stored_file_name
+        			 , file_size
+        			 , file_path
+        			 , file_extsn
+        			 , file_type
+        	 	  FROM temp_file
+        	 	 WHERE temp_file_id = ${tempFileId}
+        ]]>
+    </insert>
 </mapper>
