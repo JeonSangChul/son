@@ -7,7 +7,6 @@
 <script src="/daumeditor/js/editor_loader.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.js"></script>
 <script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
-
 <script type="text/javascript">
             // 에디터UI load
 
@@ -71,7 +70,14 @@
 		        //다음에디터가 포함된 form submit
 		        //Editor.save();
 			 setForm();
-		    })
+		    });
+		 
+		$("#btnCancle").click(function(){
+			var form = document.getElementById("frm")
+			form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
+			createInputByName(form, "boardId", '${master.boardId}');
+			form.submit();
+		});
 	 });
     //form submit 버튼 클릭
 
@@ -150,6 +156,7 @@ function setForm() {
     var frmData = $("#frm").serializeJSON();
     frmData["content"] = encodeURIComponent(content);
     frmData["count"] = nCount;
+    frmData["boardId"] = '${master.boardId}';
     
     data["frmData"] = "["+JSON.stringify(frmData)+"];";
     
@@ -160,7 +167,15 @@ function setForm() {
     	url:"<c:url value='/son/board/save.do'/>",
     	data:data,
     	success : function(data) {
-    		location.href = "/son/board/detail.do?idx="+data.idx;
+    		//location.href = "/son/board/detail.do?boardId=${master.boardId}&idx="+data.idx;
+    		var form = document.createElement("form");
+    		form.setAttribute('method', "POST");
+    		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
+    		form.target ="_self";
+    		createInputByName(form, "boardId", '${master.boardId}');
+    		createInputByName(form, "idx", data.idx);
+    		document.body.appendChild(form);
+			form.submit();
     	},
     	error: function(request,status,e){
     		alert("code:"+request.status+"\n"+"messgae:"+request.responseText+"\n"+"error:"+e);
@@ -191,7 +206,7 @@ function setForm() {
     </dl>
     
     <div class="btnArea">
-		<button type="button" class="btnW btnCancle">취소하기</button>
+		<button type="button" id ="btnCancle" class="btnW btnCancle">취소하기</button>
 		<button type="button" id="save_button" name="save_button">등록하기</button>
 	</div>
 	</form>

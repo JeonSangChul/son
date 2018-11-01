@@ -28,12 +28,8 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper("boardMapper")
 public interface BoardMapper {
 
-	/**
-	 * 글 목록을 조회한다.
-	 * @param searchVO - 조회할 정보가 담긴 VO
-	 * @return 글 목록
-	 * @exception Exception
-	 */
+	public Map<String, Object> selectBoardMasterInfo(Map<String, Object> paramMap) throws Exception;
+	
 	public List<Map<String, Object>> selectBoardList(Map<String, Object> paramMap) throws Exception;
 	
 	public int selectBoardListTotCnt(Map<String, Object> paramMap) throws Exception;
@@ -44,5 +40,5 @@ public interface BoardMapper {
 	
 	public List<Map<String, Object>> selectImgList(Map<String, Object> paramMap) throws Exception;
 
-
+	public void boardUpdate(Map<String, Object> paramMap) throws Exception;
 }

@@ -24,3 +24,18 @@ $.fn.serializeJSON = function(field){
 	disabled.prop('disabled', true);
 	return obj;
 };
+
+/**
+ * inputbox hidden bype으로 객체 생성
+ * @param form {obj} 폼객체
+ * @param name {String} inputbox의 name
+ * @param value {String} inputbox의 value
+ * @returns
+ */
+function createInputByName(form, name, value){
+	var input = document.createElement('input');
+	input.type = 'hidden';
+    input.name = name;
+    input.value = value;  // 예에서는 이미지경로만 받아서 사용
+    form.appendChild(input);
+};

@@ -26,7 +26,9 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 public interface BoardService {
-
+	
+	public Map<String, Object> selectBoardMasterInfo(Map<String, Object> paramMap) throws Exception;
+	
 	public List<Map<String, Object>> selectBoardList(Map<String, Object> paramMap) throws Exception;
 	
 	public int selectBoardListTotCnt(Map<String, Object> paramMap) throws Exception;
@@ -36,5 +38,7 @@ public interface BoardService {
 	public Map<String, Object> selectBoardDetail(Map<String, Object> paramMap) throws Exception;
 	
 	public List<Map<String, Object>> selectImgList(Map<String, Object> paramMap) throws Exception;
+	
+	public Map<String, Object> boardUpdate(Map<String, Object> paramMap, HttpServletRequest request) throws Exception;
 }
 

@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="son.board.dao.BoardMapper">
-
+	
+	<select id="selectBoardMasterInfo" parameterType="paramMap" resultType="egovMap">
+		<![CDATA[
+			SELECT t1.board_id
+			      ,t1.board_name
+			  FROM board_master t1
+			 WHERE 1=1
+			   AND t1.board_id = #{boardId}
+		]]>
+	</select>
+	
     <select id="selectBoardList" parameterType="paramMap" resultType="egovMap">
         <![CDATA[
-        	SELECT idx
-        		   ,title
-        		   ,user_id
-        		   ,DATE_FORMAT(create_dt,'%Y-%m-%d') as create_dt
-        	  FROM board
-        	  ORDER BY idx desc
+        	SELECT  t1.board_id
+        		   ,t1.board_name
+        		   ,t2.idx
+        		   ,t2.title
+        		   ,t2.user_id
+        		   ,DATE_FORMAT(t2.create_dt,'%Y-%m-%d') as create_dt
+        	  FROM board_master t1
+        	      ,board t2
+        	 WHERE t1.board_id = #{boardId}
+        	   AND t1.board_id = t2.board_id
+        	  ORDER BY t2.idx desc
         	 LIMIT #{start} , #{pageSize}
         	 
         ]]>
@@ -19,20 +34,23 @@
         <![CDATA[
         	SELECT count(*)
         	  FROM board
+        	 WHERE board_id = #{boardId}
         ]]>
     </select>
     
     <insert id="boardInsert" parameterType="paramMap">
         <![CDATA[
         	INSERT INTO board
-        			( user_id
+        			( board_id
+        			 ,user_id
         			 ,title
         			 ,content
         			 ,img_id
         			 ,create_dt
         			 ,update_dt
         			)
-        		values 	( 'son'
+        		values 	(#{boardId}
+        				 ,'son'
         				 ,#{title}
         				 ,#{content}
         				 ,#{imgId}
@@ -90,7 +108,8 @@
     
     <select id="selectBoardDetail" parameterType="paramMap" resultType="egovMap">
         <![CDATA[
-        	SELECT idx
+        	SELECT board_id
+        		   ,idx
         	       ,title
         	       ,content
         	       ,user_id
@@ -98,6 +117,7 @@
         	       ,img_id
         	  FROM board
         	 WHERE 1=1
+        	   AND board_id = #{boardId}
         	   AND idx = #{idx}
         ]]>
     </select>
@@ -118,4 +138,17 @@
         	   and t1.img_id = #{imgId}
         ]]>
     </select>
+    
+    <update id="boardUpdate" parameterType="paramMap">
+    	<![CDATA[
+    		UPDATE board
+    		   SET title = #{title}
+    		      ,content = #{content}
+    		      ,img_id = #{imgId}
+    		      ,update_dt = now()
+    		 WHERE 1=1
+    		   AND board_id = #{boardId}
+    		   AND idx = #{idx}
+    	]]>
+    </update>
 </mapper>

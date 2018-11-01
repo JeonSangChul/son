@@ -6,6 +6,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles"  prefix="tiles"%>
 
 <link type="text/css" rel="stylesheet" href="<c:url value='/css/common.css'/>"/>
+<script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="ko">
 <head>

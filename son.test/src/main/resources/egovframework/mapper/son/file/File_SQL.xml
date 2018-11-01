@@ -11,6 +11,8 @@
         		  ,t2.file_size
         		  ,t2.file_path
         		  ,t2.file_extsn
+        		  ,t2.file_url
+        		  ,t2.thumb_url
         	  FROM board_image t1
         	      ,board_image_detail t2
         	 WHERE 1=1
@@ -29,6 +31,8 @@
         			 ,file_path
         			 ,file_extsn
         			 ,file_type
+        			 ,file_url
+        			 ,thumb_url
         			)
         		VALUES (  #{originFileName}
         				 ,#{storedFileName}
@@ -36,6 +40,8 @@
         				 ,#{filePath}
         				 ,#{fileExtsn}
         				 ,#{fileType}
+        				 ,#{fileUrl}
+        				 ,#{thumbUrl}
         			   )
         ]]>
         <selectKey keyProperty="tempFileId" resultType="Integer">
@@ -83,6 +89,8 @@
         			 ,file_path
         			 ,file_extsn
         			 ,file_type
+        			 ,file_url
+        			 ,thumb_url
         			)
         		SELECT #{imgId}
         			 , #{imgSrno}
@@ -92,8 +100,58 @@
         			 , file_path
         			 , file_extsn
         			 , file_type
+        			 , file_url
+        			 , thumb_url
         	 	  FROM temp_file
-        	 	 WHERE temp_file_id = ${tempFileId}
+        	 	 WHERE temp_file_id = #{tempFileId}
         ]]>
     </insert>
+    
+    <select id="selectFileList" parameterType="paramMap" resultType="egovMap">
+        <![CDATA[
+        	SELECT t2.img_id
+        		  ,t2.img_srno
+        		  ,t2.origin_file_name
+        		  ,t2.stored_file_name
+        		  ,t2.file_size
+        		  ,t2.file_path
+        		  ,t2.file_extsn
+        		  ,t2.file_url
+        		  ,t2.thumb_url
+        		  ,t2.file_type
+        	  FROM board_image t1
+        	      ,board_image_detail t2
+        	 WHERE 1=1
+        	   AND t1.img_id = t2.img_id
+        	   and t1.img_id = #{imgId}
+        ]]>
+    </select>
+    
+    <delete id="deleteFileDetail" parameterType="paramMap">
+    	<![CDATA[
+    		DELETE
+    		  FROM board_image_detail
+    		 WHERE 1=1
+    		   AND img_id = #{imgId}
+    		   AND img_srno = #{imgSrno}
+    	]]>
+    </delete>
+    
+    <select id="selectFileCnt" parameterType="paramMap" resultType="Integer">
+    	<![CDATA[
+    		SELECT count(*)
+    		  FROM board_image_detail
+    		 WHERE 1=1
+    		   AND img_id = #{imgId}
+    	]]>
+    </select>
+    
+    <delete id="deleteFile" parameterType="paramMap">
+    	<![CDATA[
+    		DELETE
+    		  FROM board_image
+    		 WHERE 1=1
+    		   AND img_id = #{imgId}
+    	]]>
+    </delete>
 </mapper>

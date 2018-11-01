@@ -81,17 +81,18 @@ public class FileServiceImpl extends EgovAbstractServiceImpl implements FileServ
 				e.printStackTrace();
 			}
 			
+			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView.do?fileName="+modifyName+"&filePath="+path;
+			
 			fileInfo.put("originFileName", originalName);
 			fileInfo.put("storedFileName", modifyName);
 			fileInfo.put("fileSize", filesize);
 			fileInfo.put("filePath", path);
 			fileInfo.put("fileExtsn", originalNameExtension);
 			fileInfo.put("fileType", "image");
+			fileInfo.put("fileUrl", imageurl);
+			fileInfo.put("thumbUrl", imageurl);
 			
 			fileMapper.tempFileInsert(fileInfo);
-			
-			
-			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView.do?fileName="+modifyName+"&filePath="+path;
 			
 			//파일 확장자 정보도 수정예쩡
 			fileInfo.put("url", imageurl);
@@ -138,17 +139,19 @@ public class FileServiceImpl extends EgovAbstractServiceImpl implements FileServ
 				e.printStackTrace();
 			}
 			
+			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView.do?fileName="+modifyName+"&filePath="+path;
+			
 			fileInfo.put("originFileName", originalName);
 			fileInfo.put("storedFileName", modifyName);
 			fileInfo.put("fileSize", filesize);
 			fileInfo.put("filePath", path);
 			fileInfo.put("fileExtsn", originalNameExtension);
 			fileInfo.put("fileType", "file");
+			fileInfo.put("fileUrl", imageurl);
+			fileInfo.put("thumbUrl", imageurl);
 			
 			fileMapper.tempFileInsert(fileInfo);
 			
-			
-			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView.do?fileName="+modifyName+"&filePath="+path;
 			
 			//파일 확장자 정보도 수정예쩡
 			fileInfo.put("url", imageurl);
@@ -157,6 +160,12 @@ public class FileServiceImpl extends EgovAbstractServiceImpl implements FileServ
 			fileList.add(fileInfo);
 		}
 		return fileList;
+	}
+
+	@Override
+	public List<Map<String, Object>> selectFileList(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		return fileMapper.selectFileList(paramMap);
 	}
 
 

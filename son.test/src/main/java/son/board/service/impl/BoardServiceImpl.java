@@ -38,6 +38,13 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	private FileMapper fileMapper;
 	
 	@Override
+	public Map<String, Object> selectBoardMasterInfo( 
+			Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		return boardMapper.selectBoardMasterInfo(paramMap);
+	}
+	
+	@Override
 	public List<Map<String, Object>> selectBoardList(
 			Map<String, Object> paramMap) throws Exception {
 		// TODO Auto-generated method stub
@@ -86,6 +93,7 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 				}else {
 					fileMap.put("imgId", map.get("imgId"));
 					fileMapper.insertFileDetail(fileMap);
+					fileMapper.deleteTempFile(fileMap);
 				}
 			}
 			
@@ -111,6 +119,79 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 			throws Exception {
 		// TODO Auto-generated method stub
 		return boardMapper.selectImgList(paramMap);
+	}
+
+	@Override
+	public Map<String, Object> boardUpdate(Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		List<Map<String,Object>> frmList = new ArrayList<Map<String, Object>>();
+		List<Map<String,Object>> newFileList = new ArrayList<Map<String, Object>>();
+		List<Map<String,Object>> delFileList = new ArrayList<Map<String, Object>>();
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(paramMap.get("frmData") != null) {
+			frmList =  mapper.readValue((String) paramMap.get("frmData"), List.class);
+		}
+		
+		if(paramMap.get("newFileData") != null) {
+			newFileList =  mapper.readValue((String) paramMap.get("newFileData"), List.class);
+		}
+		
+		if(paramMap.get("delFileData") != null) {
+			delFileList =  mapper.readValue((String) paramMap.get("delFileData"), List.class);
+		}
+		
+		for(Map<String, Object> delFileMap : delFileList) {
+			String filePath = (String) delFileMap.get("filePath");
+			String storedFileName = (String) delFileMap.get("storedFileName");
+			
+			File file = new File(filePath+storedFileName);
+			
+			if(file.exists()) file.delete();
+			
+			fileMapper.deleteFileDetail(delFileMap);
+		}
+		
+		for(Map<String, Object> map : frmList) {
+			if("".equals(String.valueOf(map.get("imgId")))) {
+				if( (Integer)map.get("count") > 0) {
+					fileMapper.fileInsert(map);
+				}
+			}
+			
+			for(Map<String, Object> fileMap : newFileList) {
+				if( "Y".equals(fileMap.get("delYn"))) {
+					String filePath = (String) fileMap.get("filePath");
+					String storedFileName = (String) fileMap.get("storedFileName");
+					File file = new File(filePath+storedFileName);
+					
+					if(file.exists()) file.delete();
+					
+					fileMapper.deleteTempFile(fileMap);
+				}else {
+					fileMap.put("imgId", map.get("imgId"));
+					fileMapper.insertFileDetail(fileMap);
+					fileMapper.deleteTempFile(fileMap);
+				}
+			}
+			
+			if(!"".equals(String.valueOf(map.get("imgId")))) {
+				int fileCnt = fileMapper.selectFileCnt(map);
+				
+				if(fileCnt == 0) {
+					fileMapper.deleteFile(map);
+					map.put("imgId", null);
+				}
+			}
+			
+			map.put("content", CommonUtils.unscript(URLDecoder.decode((String) map.get("content"),"UTF-8")));
+			map.put("title", CommonUtils.unscript((String) map.get("title")));
+			boardMapper.boardUpdate(map);
+			
+			resultMap.put("idx", map.get("idx"));
+		}
+		
+		return resultMap;
 	}
 
 

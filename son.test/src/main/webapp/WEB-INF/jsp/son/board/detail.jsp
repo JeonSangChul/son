@@ -17,6 +17,7 @@
 		$("#btnList").click(function(){
 			var form = document.getElementById("frm")
 			form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
+			createInputByName(form, "boardId", '${master.boardId}');
 			form.submit();
 		});
 
@@ -26,11 +27,8 @@
 		$("#btnModify").click(function(){
 			var form = document.getElementById("frm")
 			form.setAttribute('action', "<c:url value='/son/board/modify.do'/>");
-			var input = document.createElement('input');
-			input.type = 'hidden';
-            input.name = 'idx';
-            input.value = '${result.idx}';  // 예에서는 이미지경로만 받아서 사용
-            form.appendChild(input);
+			createInputByName(form, "boardId", '${master.boardId}');
+			createInputByName(form, "idx", '${result.idx}');
             form.submit();
 		 });
 	 });

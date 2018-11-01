@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/daumeditor/css/editor.css" type="text/css" charset="utf-8"/>
 <script src="/daumeditor/js/editor_loader.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
             // 에디터UI load
@@ -13,11 +14,58 @@
 		
 	 $(document).ready(function (){
 		 
-		//수정을 위해서
-		//그냥 write 페이지 하나에서 입력 수정 다 할까??
-		//result가 있으면 수정.do 로 태우면 되잖아?? 
-		if('${result!=null}'=='true') Editor.modify({'content': '${result.content}'});
-		 
+		var attachments = {};
+		attachments['image'] = [];
+		attachments['file'] = [];
+		if('${result!=null}'=='true'){
+			
+		//jquery로 조회 태어서 할까?? 소스가 지저분한데..
+			<c:forEach var="result" items="${fileList}" varStatus="status">
+				<c:choose>
+					<c:when test="${result.fileType == 'image' }">
+						attachments['image'].push({
+							'attacher': 'image',
+							'data' : {
+								'imageurl' : '${result.fileUrl}',
+								'filename' : '${result.originFileName}',
+								'filesize' : '${result.fileSize}',
+								'filepath' : '${result.filePath}',
+								'storedName' : '${result.storedFileName}',
+								'originalurl' : '${result.fileUrl}',
+								'thumburl' : '${result.thumbUrl}',
+								'imgId' : '${result.imgId}',
+								'imgSrno' : '${result.imgSrno}'
+							}
+						});
+					</c:when>
+					<c:when test="${result.fileType == 'file' }">
+						attachments['file'].push({
+							'attacher': 'file',
+							'data': {
+								'attachurl' : '${result.fileUrl}',
+								'filename' : '${result.originFileName}',
+								'filesize' : '${result.fileSize}',
+								'filepath' : '${result.filePath}',
+								'storedName' : '${result.storedFileName}',
+								'imgId' : '${result.imgId}',
+								'imgSrno' : '${result.imgSrno}'
+							}
+						});
+					</c:when>
+				</c:choose>
+			</c:forEach>
+			Editor.modify({
+				"attachments": function () { /* 저장된 첨부가 있을 경우 배열로 넘김, 위의 부분을 수정하고 아래 부분은 수정없이 사용 */
+					var allattachments = [];
+					for (var i in attachments) {
+						allattachments = allattachments.concat(attachments[i]);
+					}
+					return allattachments;
+				}(),
+				"content": '${result.content}' /* 내용 문자열, 주어진 필드(textarea) 엘리먼트 */
+			});
+		}
+		
 		var config = {
 			     txHost: '', 
 			     txPath: '', 
@@ -72,8 +120,7 @@
 			 
 			 
 		$("#save_button").click(function(){
-	        //다음에디터가 포함된 form submit
-			Editor.save();
+			setForm();
 	    })
 	 });
     //form submit 버튼 클릭
@@ -102,53 +149,95 @@ function validForm(editor) {
 //validForm 함수까지 true값을 받으면 이어서 form submit을 시켜주는  setForm함수
 function setForm(editor) {
 	var i, input;
-	var form = editor.getForm();
-	var content = editor.getContent();
+	var content = Editor.getContent();
 	
-	var textarea = document.createElement("textarea");
-	textarea.name = "content";
-	textarea.value = content;
-	form.createField(textarea);
-	
-	
-	//우선 등록화면에 있는걸 그대로 옴겨옴..
-	//추가 및 삭제 여부 등 체크 해서 처리 해야겠지??
-	var images = editor.getAttachments('image');
-    for (i = 0; i < images.length; i++) {
-        // existStage는 현재 본문에 존재하는지 여부
-        if (images[i].existStage) {
-        	alert('attachment information - image[' + i + '] \r\n' + JSON.stringify(images[i].data));
-        	
-            // data는 팝업에서 execAttach 등을 통해 넘긴 데이터
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'originFileName';
-            input.value = images[i].data.filename;  // 예에서는 이미지경로만 받아서 사용
-            form.createField(input);
-            
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'filePath';
-            input.value = images[i].data.filepath;  // 예에서는 이미지경로만 받아서 사용
-            form.createField(input);
-            
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'storedName';
-            input.value = images[i].data.storedName;  // 예에서는 이미지경로만 받아서 사용
-            form.createField(input);
-            
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'fileSize';
-            input.value = images[i].data.filesize;  // 예에서는 이미지경로만 받아서 사용
-            
-            form.createField(input);
-            
-            
+	var fff = Editor.getForm();
+			
+	var _filedata = new Array();
+
+    var allAttachmentList = Editor.getAttachBox().datalist;
+    var nCount = 0;
+    var szfileDatas = "";
+    var data = {};
+    var newFileItem = [];
+    var delFileItem = [];
+    
+    for( var j=0, n=allAttachmentList.length; j<n; j++ ){
+        var entry = allAttachmentList[j];
+        
+        if(entry.data.tempFileId == undefined || entry.data.tempFileId == "" || entry.data.tempFileId == "NaN") {
+        	if(entry.deletedMark == true){
+        		var delFileData = {};
+        		delFileData.imgId =  entry.data.imgId;
+        		delFileData.imgSrno =  entry.data.imgSrno;
+        		delFileData.filePath =  entry.data.filepath;
+        		delFileData.storedFileName =  entry.data.storedName;
+        		delFileItem.push(delFileData);
+        	}
+        }else{
+        	var newFileData = {};
+        	newFileData.tempFileId = entry.data.tempFileId;
+            newFileData.filePath = entry.data.filepath;
+            newFileData.storedFileName = entry.data.storedName;
+            newFileData.fileExtsn = entry.data.fileExtsn;
+            newFileData.fileType = entry.type;
+          		if(entry.deletedMark == true){
+          			newFileData.delYn ="Y";
+           	}else if(entry.existStage == false){
+           		if(entry.type == "file"){
+           			newFileData.delYn ="N";
+           			nCount++;
+           		}else{
+           			newFileData.delYn ="Y";	
+           		}
+           		
+           	}else{
+           		newFileData.delYn ="N";
+           		nCount++;
+           	}
+          		
+        	newFileItem.push(newFileData);
         }
+        
+        
+        
     }
-    return true;
+    
+    data["newFileData"] = JSON.stringify(newFileItem);
+    data["delFileData"] = JSON.stringify(delFileItem);
+    
+    var frmData = $("#frm").serializeJSON();
+    frmData["content"] = encodeURIComponent(content);
+    frmData["count"] = nCount;
+    frmData["boardId"] = '${result.boardId}';
+    frmData["idx"] = '${result.idx}';
+    frmData["imgId"] = '${result.imgId}';
+    
+    data["frmData"] = "["+JSON.stringify(frmData)+"];";
+    $.ajax({
+    	type:"POST",
+    	cache:false,
+    	async:false,
+    	url:"<c:url value='/son/board/update.do'/>",
+    	data:data,
+    	success : function(data) {
+    		//location.href = "/son/board/detail.do?boardId=${master.boardId}&idx="+data.idx;
+    		var form = document.createElement("form");
+    		form.setAttribute('method', "POST");
+    		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
+    		form.target ="_self";
+    		createInputByName(form, "boardId", data.boardId);
+    		createInputByName(form, "idx", data.idx);
+    		document.body.appendChild(form);
+			form.submit();
+    	},
+    	error: function(request,status,e){
+    		alert("code:"+request.status+"\n"+"messgae:"+request.responseText+"\n"+"error:"+e);
+    		//alert("업로드 중 오류가 발생하였습니다.");
+    		
+    		return false;
+    	}
+    });
 }
 
 
@@ -161,7 +250,7 @@ function setForm(editor) {
 	
     <form name="frm" id="frm" action="/son/board/save.do" method="post" accept-charset="utf-8">
     <dl class="sec">
-		<dd><input type="text" class="inp" id="title" name="title" placeholder="제목을 입력해 주세요." /> </dd>
+		<dd><input type="text" class="inp" id="title" name="title" value='<c:out value="${result.title}" />' placeholder="제목을 입력해 주세요." /> </dd>
 	</dl>
     <dl class="sec">
     <jsp:include page="/daumeditor/editor_frame.jsp"></jsp:include>

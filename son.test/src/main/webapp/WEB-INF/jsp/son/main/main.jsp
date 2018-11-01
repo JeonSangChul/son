@@ -9,6 +9,5 @@
 </script>
 <div style="min-height: 500px;">
 	<h3>바디</h3>
-	깃허브 커밋용
-	<a href="/son/board/list.do">게시판바로가기</a>
+	<a href="/son/board/list.do?boardId=1">게시판바로가기</a>
 </div>

@@ -7,20 +7,32 @@
 <script type="text/javascript">
 
 $(document).ready(function (){
-	document.listForm.action = "<c:url value='/son/board/write.do'/>";
-	document.listForm.submit();
 });
 
 function fn_search(pageNo){
-	var frm = $("#listForm");
+	
+	var form = document.getElementById("listForm")
+	form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
 	$("#pageIndex").val(pageNo);
-	frm.action= "<c:url value='/son/board/list.do'/>";
-	frm.submit();
+    form.submit();
 }
 
 function fn_write(){
-	document.listForm.action = "<c:url value='/son/board/write.do'/>";
-	document.listForm.submit();
+	
+	var form = document.getElementById("listForm")
+	form.setAttribute('action', "<c:url value='/son/board/write.do'/>");
+	createInputByName(form, "boardId", '${master.boardId}');
+    form.submit();
+}
+
+function fn_detail(idx){
+	
+	var form = document.getElementById("listForm")
+	form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
+	createInputByName(form, "boardId", '${master.boardId}');
+	createInputByName(form, "idx", idx);
+    
+    form.submit();
 }
 
 </script>
@@ -51,7 +63,7 @@ function fn_write(){
 			<c:forEach var="result" items="${resultList}" varStatus="status">
 				<tr>
 					<td class="no"><c:out value="${result.idx }"></c:out> </td>
-					<td class="tit"><a href="/son/board/detail.do?idx=${result.idx }"><c:out value="${result.title }"></c:out></a> </td>
+					<td class="tit"><a href="javascript:fn_detail('${result.idx }');"><c:out value="${result.title }"></c:out></a> </td>
 					<td class="tit"><c:out value="${result.userId }"></c:out> </td>
 					<td class="date"><c:out value="${result.createDt }"></c:out> </td>
 					<td></td>

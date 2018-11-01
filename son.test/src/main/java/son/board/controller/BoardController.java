@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import son.board.service.BoardService;
+import son.file.service.FileService;
 
 @Controller
 public class BoardController {
@@ -26,6 +26,9 @@ public class BoardController {
 	
 	@Resource(name = "boardService")
 	private BoardService boardService;
+	
+	@Resource(name = "fileService")
+	private FileService fileService;
 	
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
@@ -39,6 +42,10 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/son/board/list.do")
 	public String list(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+		
+		
+		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
+		
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
 		
@@ -58,6 +65,9 @@ public class BoardController {
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
 		model.addAttribute("resultList", resultList);
+		model.addAttribute("searchMap", paramMap);
+		model.addAttribute("master", masterMap);
+		
 		return "son/board/list";
 	}
 	
@@ -70,6 +80,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/son/board/detail.do")
 	public String detail(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
 		List<Map<String, Object>> imgList = new ArrayList<Map<String,Object>>();
@@ -81,7 +92,7 @@ public class BoardController {
 			imgList = boardService.selectImgList(resultMap);
 		}
 		model.addAttribute("imgList", imgList);
-		
+		model.addAttribute("master", masterMap);
 		return "son/board/detail";
 	}
 	
@@ -94,6 +105,8 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/son/board/write.do")
 	public String write(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
+		model.addAttribute("master", masterMap);
 		
 		return "son/board/write";
 	}
@@ -107,10 +120,18 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/son/board/modify.do")
 	public String modify(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
-		
+		List<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
+		if(resultMap.get("imgId") != null){
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("imgId", resultMap.get("imgId"));
+			fileList = fileService.selectFileList(map);
+		}
 		//파일정보 조회 로직 추가 해야함..
 		model.addAttribute("result", resultMap);
+		model.addAttribute("master", masterMap);
+		model.addAttribute("fileList", fileList);
 		return "son/board/modify";
 	}
 	
@@ -153,6 +174,13 @@ public class BoardController {
 		
 		Map<String, Object> map = boardService.boardInsert(paramMap, request);
 		
+		return map;
+	}
+	
+	@RequestMapping(value="/son/board/update.do")
+	public @ResponseBody Map<String, Object> update(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+		
+		Map<String, Object> map = boardService.boardUpdate(paramMap, request);
 		return map;
 	}
 	
