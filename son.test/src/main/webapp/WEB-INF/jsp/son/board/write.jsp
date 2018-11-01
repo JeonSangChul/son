@@ -121,23 +121,26 @@ function setForm() {
     for( var j=0, n=allAttachmentList.length; j<n; j++ ){
         var entry = allAttachmentList[j];
         var fileData = {};
-        if(entry.type == "file"){
-        	
-        }else if(entry.type == "image"){
-        	fileData.tempFileId = entry.data.tempFileId;
-        	fileData.filePath = entry.data.filepath;
-        	fileData.storedFileName = entry.data.storedName;
-        	fileData.fileExtsn = entry.data.fileExtsn;
-        	fileData.fileType = entry.type;
-       		if(entry.deletedMark == true){
-       			fileData.delYn ="Y";
-        	}else if(entry.existStage == false){
-        		fileData.delYn ="Y";
-        	}else{
-        		fileData.delYn ="N";
-        		nCount++;
-        	}
-        }
+       	fileData.tempFileId = entry.data.tempFileId;
+       	fileData.filePath = entry.data.filepath;
+       	fileData.storedFileName = entry.data.storedName;
+       	fileData.fileExtsn = entry.data.fileExtsn;
+       	fileData.fileType = entry.type;
+      		if(entry.deletedMark == true){
+      			fileData.delYn ="Y";
+       	}else if(entry.existStage == false){
+       		if(entry.type == "file"){
+       			fileData.delYn ="N";
+       			nCount++;
+       		}else{
+       			fileData.delYn ="Y";	
+       		}
+       		
+       	}else{
+       		fileData.delYn ="N";
+       		nCount++;
+       	}
+      		
         fileItem.push(fileData);
         
     }

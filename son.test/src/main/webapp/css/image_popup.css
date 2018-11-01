@@ -801,7 +801,7 @@ button.off .icon_sfavorite{background-position:-200px 0}
 /*파일 업로드*/
 .pop_wrap.file.local{width:858px}
 .file_upcont{padding:21px 20px 17px}
-.file_upbox{height:109px;padding:13px 16px 16px;margin-bottom:13px;border:1px solid #cecdce}
+.file_upbox{min-height:109px;padding:13px 16px 16px;margin-bottom:13px;border:1px solid #cecdce}
 .file_upbox li span{display:inline-block;max-width:505px;color:#555;vertical-align:top;line-height:22px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
 .file_upbox li .btn_del{margin-top:4px}
 .file_txtinfo{font-size:12px;color:#555}

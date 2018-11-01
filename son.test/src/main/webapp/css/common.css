@@ -102,19 +102,16 @@ legend,caption {display:none;}
 
 button[type="button"] {
   cursor: pointer;
-  padding: 0;
-  color: #fff;height:44px;
   font-size: 15px;
   border: none;
-  background-color: #e30413;
-  -webkit-border-radius:3px;
-  -moz-border-radius:3px;
-  border-radius:3px;
+  padding: 0;
 }
-
 
 .boardFileList{margin-top:15px;padding:8px 13px 9px;border:1px solid #d5d5d5}
 .boardFileList strong{font-size:12px}
 .boardFileListView{overflow:hidden;margin:0px 0 0 -7px}
 .boardFileListView li{float:left;margin-left:7px;line-height:15px}
 .boardFileListView a{font-family:Dotum,'돋움';color:#666}
+
+.icon_bword_del,.icon_del{display:inline-block;width:13px;height:13px;background-position:-121px -162px}
+.btn_del{width:13px;height:13px;margin-left:4px;font-size:1px}

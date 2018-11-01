@@ -142,6 +142,19 @@ public class FileController {
 		resultMap.put("files", fileList);
 		return resultMap;
 	}
+	
+	@RequestMapping(value="/son/file/multiFileUpload.do")
+	@ResponseBody
+	public Map<String, Object> multiFileUpload(ModelMap model
+									, MultipartHttpServletRequest multipartHttpServletRequest
+									, HttpSession httpSession) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> fileList = fileService.multiFileUpload(multipartHttpServletRequest, httpSession);
+		
+		resultMap.put("files", fileList);
+		return resultMap;
+	}
 			
 	
 	/**

@@ -32,6 +32,7 @@ public interface FileService {
 	
 	public List<Map<String, Object>> multiImgUpload(MultipartHttpServletRequest multipartHttpServletRequest, HttpSession httpSession) throws Exception; 
 	
+	public List<Map<String, Object>> multiFileUpload(MultipartHttpServletRequest multipartHttpServletRequest, HttpSession httpSession) throws Exception;
 	public Map<String, Object> selectFileInfo(Map<String, Object> paramMap) throws Exception;
 }
 
