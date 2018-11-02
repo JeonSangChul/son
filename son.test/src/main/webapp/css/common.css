@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,p{margin: 0; padding: 0;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,p{margin: 0; padding: 0; vertical-align: baseline;}
 
 body{
 	align:center;
@@ -94,7 +94,8 @@ legend,caption {display:none;}
 .boardView .prevnext li.next em {background-position:0 -33px;}
 .boardView .prevnext a {display:table-cell;vertical-align:middle;text-align:left;font-size:14px;color:#aaa;}
 .boardView .prevnext .date {display:table-cell;vertical-align:middle;text-align:right;padding-right:10px;font-size:14px;color:#aaa;}
-.boardView .boardBtn {margin-top:40px;}
+.boardView .btnArea {text-align:right;margin-top:25px;}
+.boardView .btnArea button[type="button"] {width:90px;height:34px;}
 
 .boardBtn {text-align:center;}
 .boardBtn .btnList {width:140px;}
@@ -115,3 +116,16 @@ button[type="button"] {
 
 .icon_bword_del,.icon_del{display:inline-block;width:13px;height:13px;background-position:-121px -162px}
 .btn_del{width:13px;height:13px;margin-left:4px;font-size:1px}
+
+.cmtList{border-top:2px solid #525eaa}
+
+.cmtInfo{position:relative;padding:9px 12px 7px;border-top:1px solid #eee}
+.cmtUser{float:left;width:114px;margin-right:50px;margin-top:3px}
+.cmtContent{float:left;width: 600px; line-height: 20px;}
+.cmtTime{float:right}
+
+.cmtWrite{position:relative;border-top:2px solid #525eaa;padding:12px 12px 12px;background:#fafafa;}
+.cmtWrite textarea{width:900px;height:78px;padding:13px;border:1px solid #cecdce;background:#fff;font-family:'굴림',Gulim;font-size:13px;color:#333;line-height:18px}
+
+.cmtBtnArea {text-align:right;margin-top:10px; padding-right: 15px;}
+.cmtBtnArea button[type="button"] {width:90px;height:34px;}

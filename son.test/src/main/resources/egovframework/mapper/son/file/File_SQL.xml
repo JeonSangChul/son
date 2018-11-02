@@ -154,4 +154,13 @@
     		   AND img_id = #{imgId}
     	]]>
     </delete>
+    
+    <delete id="deleteAllFileDetail" parameterType="paramMap">
+    	<![CDATA[
+    		DELETE
+    		  FROM board_image_detail
+    		 WHERE 1=1
+    		   AND img_id = #{imgId}
+    	]]>
+    </delete>
 </mapper>

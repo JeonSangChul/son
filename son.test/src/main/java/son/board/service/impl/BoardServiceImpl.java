@@ -189,9 +189,30 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 			boardMapper.boardUpdate(map);
 			
 			resultMap.put("idx", map.get("idx"));
+			resultMap.put("boardId", map.get("boardId"));
 		}
 		
 		return resultMap;
+	}
+
+	@Override
+	public void boardDelete(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> fileList = fileMapper.selectFileList(paramMap);
+		
+		boardMapper.boardDelete(paramMap);
+		fileMapper.deleteAllFileDetail(paramMap);
+		fileMapper.deleteFile(paramMap);
+		
+		for (Map<String, Object> fileMap : fileList) {
+			String filePath = (String) fileMap.get("filePath");
+			String storedFileName = (String) fileMap.get("storedFileName");
+			
+			File file = new File(filePath+storedFileName);
+			
+			if(file.exists()) file.delete();
+		}
+		
 	}
 
 

@@ -6,6 +6,8 @@
 		<![CDATA[
 			SELECT t1.board_id
 			      ,t1.board_name
+			      ,t1.comment_yn
+			      ,t1.use_yn
 			  FROM board_master t1
 			 WHERE 1=1
 			   AND t1.board_id = #{boardId}
@@ -20,6 +22,7 @@
         		   ,t2.title
         		   ,t2.user_id
         		   ,DATE_FORMAT(t2.create_dt,'%Y-%m-%d') as create_dt
+        		   ,t2.view_cnt
         	  FROM board_master t1
         	      ,board t2
         	 WHERE t1.board_id = #{boardId}
@@ -144,11 +147,32 @@
     		UPDATE board
     		   SET title = #{title}
     		      ,content = #{content}
-    		      ,img_id = #{imgId}
     		      ,update_dt = now()
+    	]]>
+	    	<if test='imgId == null or imgId ==""'>
+	    		<![CDATA[
+	    		  ,img_id = null
+	    		]]>
+	    	</if>
+	    	<if test='imgId != null and imgId !=""'>
+	    		<![CDATA[
+	    		  ,img_id = #{imgId}
+	    		]]>
+	    	</if>  
+    	<![CDATA[
     		 WHERE 1=1
     		   AND board_id = #{boardId}
     		   AND idx = #{idx}
     	]]>
     </update>
+    
+    <delete id="boardDelete" parameterType="paramMap">
+    	<![CDATA[
+    		DELETE 
+    		  FROM board
+    		 WHERE 1=1
+    		   and board_id = #{boardId}
+    		   and idx = #{idx}
+    	]]>
+    </delete>
 </mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="son.comment.dao.CommentMapper">
+	
+    <select id="selectCommentList" parameterType="paramMap" resultType="egovMap">
+        <![CDATA[
+        	SELECT  t1.comment_id
+        		   ,t1.board_id
+        		   ,t1.idx
+        		   ,t1.user_id
+        		   ,t1.comment_content
+        		   ,t1.create_dt
+        	  FROM board_comment t1
+        	 WHERE t1.board_id = #{boardId}
+        	   AND t1.idx = #{idx}
+        	 
+        ]]>
+    </select>
+    
+    <insert id="commentSave" parameterType="paramMap">
+    	<![CDATA[
+    		INSERT INTO board_comment
+    				( board_id
+    				 ,idx
+    				 ,user_id
+    				 ,comment_content
+    				 ,create_dt
+    				 ,update_dt
+    				)
+    			VALUES	( #{boardId}
+    					 ,#{idx}
+    					 ,'son'
+    					 ,#{commentContent}
+    					 ,now()
+    					 ,now()
+    					 )
+    	]]>
+    </insert>
+</mapper>

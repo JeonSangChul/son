@@ -11,15 +11,16 @@ $(document).ready(function (){
 
 function fn_search(pageNo){
 	
-	var form = document.getElementById("listForm")
+	var form = document.getElementById("listForm");
 	form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
-	$("#pageIndex").val(pageNo);
+	createInputByName(form, "boardId", '${master.boardId}');
+	createInputByName(form, "pageIndex", pageNo);
     form.submit();
 }
 
 function fn_write(){
 	
-	var form = document.getElementById("listForm")
+	var form = document.getElementById("listForm");
 	form.setAttribute('action', "<c:url value='/son/board/write.do'/>");
 	createInputByName(form, "boardId", '${master.boardId}');
     form.submit();
@@ -37,12 +38,12 @@ function fn_detail(idx){
 
 </script>
 <div class="pagetit">
-	<h3>글목록</h3>
+	<h3><c:out value="${master.boardName }" /></h3>
 </div>
 <form name="listForm" id="listForm" method="post">
 <div class="boardList">
-   <table summary="게시판">
-	   <caption>공지사항 게시판</caption>
+   <table summary='<c:out value="${master.boardName }" />'>
+	   <caption><c:out value="${master.boardName }" /></caption>
 	   <colgroup>
 			<col width="10%" />
 			<col width="60%" />
@@ -66,15 +67,14 @@ function fn_detail(idx){
 					<td class="tit"><a href="javascript:fn_detail('${result.idx }');"><c:out value="${result.title }"></c:out></a> </td>
 					<td class="tit"><c:out value="${result.userId }"></c:out> </td>
 					<td class="date"><c:out value="${result.createDt }"></c:out> </td>
-					<td></td>
+					<td class="no"><c:out value="${result.viewCnt }"></c:out> </td>
 				</tr>
 			</c:forEach>
 		</tbody>
    </table>
    
 	<div class="paging">
-		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fnSearch" />
-		<form:hidden path="pageIndex" />
+		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_search" />
 	</div>
 	<div class="btnArea">
 		<button type="button" onclick="fn_write();">글쓰기</button>

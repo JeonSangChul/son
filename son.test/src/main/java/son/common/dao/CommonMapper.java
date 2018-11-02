@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package son.board.dao;
+package son.common.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -25,22 +25,9 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
  * @author JeonPc
  *
  */
-@Mapper("boardMapper")
-public interface BoardMapper {
+@Mapper("commonMapper")
+public interface CommonMapper {
 
-	public Map<String, Object> selectBoardMasterInfo(Map<String, Object> paramMap) throws Exception;
+	public List<Map<String, Object>> selectBoardMasterList(Map<String, Object> paramMap) throws Exception;
 	
-	public List<Map<String, Object>> selectBoardList(Map<String, Object> paramMap) throws Exception;
-	
-	public int selectBoardListTotCnt(Map<String, Object> paramMap) throws Exception;
-	
-	public int boardInsert(Map<String, Object> paramMap) throws Exception;
-	
-	public Map<String, Object> selectBoardDetail(Map<String, Object> paramMap) throws Exception;
-	
-	public List<Map<String, Object>> selectImgList(Map<String, Object> paramMap) throws Exception;
-
-	public void boardUpdate(Map<String, Object> paramMap) throws Exception;
-	
-	public void boardDelete(Map<String, Object> paramMap) throws Exception;
 }

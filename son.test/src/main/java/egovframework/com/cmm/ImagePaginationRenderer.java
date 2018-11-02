@@ -30,12 +30,12 @@ public class ImagePaginationRenderer extends AbstractPaginationRenderer implemen
 	}
 
 	public void initVariables(){
-		firstPageLabel    = "<a href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \" class=\"pagPrev\"><span class=\"spr\"><em class=\"blind\">처음</em></span></a>&#160;";
-        previousPageLabel = "<a href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \" class=\"pagPrev\"><span class=\"spr\"><em class=\"blind\">처음</em></span></a>&#160;";
+		firstPageLabel    = "<a href=\"\" onclick=\"{0}({1});return false; \" class=\"pagPrev\"><span class=\"spr\"><em class=\"blind\">처음</em></span></a>&#160;";
+        previousPageLabel = "<a href=\"\" onclick=\"{0}({1});return false; \" class=\"pagPrev\"><span class=\"spr\"><em class=\"blind\">처음</em></span></a>&#160;";
         currentPageLabel  = "<strong><span class=\"blind\">현재 페이지:</span>{0}</strong>&#160;";
-        otherPageLabel    = "<a href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \" class=\"num\">{2}<span class=\"blind\">페이지로 이동</span></a>&#160;";
-        nextPageLabel     = "<a href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \" class=\"pagNext\"><span class=\"spr\"><em class=\"blind\">목록에서 끝 페이지 이동</em></span></a>&#160;";
-        lastPageLabel     = "<a href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \" class=\"pagNext\"><span class=\"spr\"><em class=\"blind\">목록에서 끝 페이지 이동</em></span></a>&#160;";
+        otherPageLabel    = "<a href=\"\" onclick=\"{0}({1});return false; \" class=\"num\">{2}<span class=\"blind\">페이지로 이동</span></a>&#160;";
+        nextPageLabel     = "<a href=\"\" onclick=\"{0}({1});return false; \" class=\"pagNext\"><span class=\"spr\"><em class=\"blind\">목록에서 끝 페이지 이동</em></span></a>&#160;";
+        lastPageLabel     = "<a href=\"\" onclick=\"{0}({1});return false; \" class=\"pagNext\"><span class=\"spr\"><em class=\"blind\">목록에서 끝 페이지 이동</em></span></a>&#160;";
 	}
 
 

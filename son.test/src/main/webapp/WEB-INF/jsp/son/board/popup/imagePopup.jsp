@@ -6,22 +6,22 @@
 	<script src="/daumeditor/js/popup.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="/daumeditor/css/popup.css" type="text/css"  charset="utf-8"/>
 	<link rel="stylesheet" href="/css/image_popup.css" type="text/css"  charset="utf-8"/>
-	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="//code.jquery.com/jquery-1.7.2.min.js"></script>
+	<![endif]-->
+	<!--[if gte IE 9]>
+	<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+	<![endif]-->
+	<!--[if !IE]> -->
+	<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+	<!-- <![endif]-->
+	<script type='text/javascript' src='<c:url value="/js/jquery-ui.min.js"/>'></script>
+	
 	<script type="text/javascript" src="/js/jquery.form.js"></script>
 	<script type='text/javascript' src='<c:url value="/js/html5shiv.min.js"/>'></script>
 	<link rel="stylesheet" href="/css/jquery.fileupload-ui.css"></link>
 	<noscript><link rel="stylesheet" href="/css/jquery.fileupload-ui-noscript.css"></noscript>
 	
-	<!--[if lt IE 9]>
-	<script type='text/javascript' src='<c:url value="/js/jquery-1.7.2.min.js"/>'></script>
-	<![endif]-->
-	<!--[if gte IE 9]>
-	<script type='text/javascript' src='<c:url value="/js/jquery-3.2.1.min.js"/>'></script>
-	<![endif]-->
-	<!--[if !IE]> -->
-	<script type='text/javascript' src='<c:url value="/js/jquery-3.2.1.min.js"/>'></script>
-	<!-- <![endif]-->
-	<script type='text/javascript' src='<c:url value="/js/jquery-ui.min.js"/>'></script>
 	
 	<script type="text/javascript">
 	var _mockdata = new Array();

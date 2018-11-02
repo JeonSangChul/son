@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="son.common.dao.CommonMapper">
+	<select id="selectBoardMasterList" parameterType="paramMap" resultType="egovMap">
+		<![CDATA[
+			SELECT t1.board_id
+			      ,t1.board_name
+			      ,T1.comment_yn
+			      ,t1.use_yn
+			  FROM board_master t1
+			 WHERE 1=1
+			   AND use_yn ='Y'
+		]]>
+	</select>
+</mapper>

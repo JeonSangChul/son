@@ -5,8 +5,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <link rel="stylesheet" href="/daumeditor/css/editor.css" type="text/css" charset="utf-8"/>
 <script src="/daumeditor/js/editor_loader.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
             // 에디터UI load
@@ -244,7 +242,7 @@ function setForm(editor) {
 </script>
 
 	<div class="pagetit">
-		<h3>글등록</h3>
+		<h3><c:out value="${master.boardName }" /></h3>
 	</div>
 	<div class="inputForm">
 	

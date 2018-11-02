@@ -5,7 +5,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <link rel="stylesheet" href="/daumeditor/css/editor.css" type="text/css" charset="utf-8"/>
 <script src="/daumeditor/js/editor_loader.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
 <script type="text/javascript">
 
@@ -31,12 +30,37 @@
 			createInputByName(form, "idx", '${result.idx}');
             form.submit();
 		 });
+		
+		$("#btnDelete").click(function(){
+			
+			$.ajax({
+				type:"POST",
+		    	cache:false,
+		    	async:false,
+		    	url:"<c:url value='/son/board/delete.do'/>",
+		    	data:{boardId : '${master.boardId}'
+		    		 ,idx : '${result.idx}'
+		    		 ,imgId : '${result.imgId}'
+		    		},
+	    		success : function(data) {
+	    			var form = document.getElementById("frm")
+	    			form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
+	    			createInputByName(form, "boardId", data.boardId);
+	    			createInputByName(form, "idx", data.Idx);
+	                form.submit();
+	    		},
+	    		error: function(request,status,e){
+	    			alert("삭제중 오류가 발생하였습니다.");
+	    			return;
+	    		}
+			});
+		 });
 	 });
 
 </script>
 
 	<div class="pagetit">
-		<h3>글상세</h3>
+		<h3><c:out value="${master.boardName }" /></h3>
 	</div>
 	<div class="boardView">
 		<div class="top">
@@ -59,12 +83,17 @@
 			
 		</c:if>
 		
-		<div class="boardBtn">
+		<div class="btnArea">
 			<button type="button" class="btnList" id ="btnList"><em>목록보기</em></button>
 			<button type="button" class="btnModify" id ="btnModify"><em>수정</em></button>
+			<button type="button" class="btnDelete" id ="btnDelete">삭제</button>
 		</div>
 		
-	</div>
-	
+	</div> 
 	<form name="frm" id="frm" method="post"></form>
+	<c:if test="${master.commentYn == 'Y'}">
+		<c:import url="/WEB-INF/jsp/son/comment/commentMain.jsp"></c:import>
+	</c:if>
+	
+	
 

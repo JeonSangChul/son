@@ -14,10 +14,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndViewDefiningException;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import son.board.service.BoardService;
+import son.comment.service.CommentService;
 import son.file.service.FileService;
 
 @Controller
@@ -29,6 +32,9 @@ public class BoardController {
 	
 	@Resource(name = "fileService")
 	private FileService fileService;
+	
+	@Resource(name = "commentService")
+	private CommentService commentService;
 	
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
@@ -43,9 +49,14 @@ public class BoardController {
 	@RequestMapping(value="/son/board/list.do")
 	public String list(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
 		
-		
+		//나중에 공통으로 
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		
+		if(masterMap == null) {
+			ModelAndView modelAndView = new ModelAndView("forward:/code404.jsp");
+			
+			throw new ModelAndViewDefiningException(modelAndView);
+		}
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
 		
@@ -81,9 +92,9 @@ public class BoardController {
 	@RequestMapping(value="/son/board/detail.do")
 	public String detail(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
-		
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
 		List<Map<String, Object>> imgList = new ArrayList<Map<String,Object>>();
+		List<Map<String, Object>> cmtList = new ArrayList<Map<String,Object>>();
 		model.addAttribute("result", resultMap);
 		
 		//파일id가 있을시 파일정보조회
@@ -91,7 +102,12 @@ public class BoardController {
 		if(resultMap.get("imgId") != null){
 			imgList = boardService.selectImgList(resultMap);
 		}
+		
+		if("Y".equals(masterMap.get("commentYn"))) {
+			cmtList = commentService.selectCommentList(paramMap); 
+		}
 		model.addAttribute("imgList", imgList);
+		model.addAttribute("cmtList", cmtList);
 		model.addAttribute("master", masterMap);
 		return "son/board/detail";
 	}
@@ -183,5 +199,14 @@ public class BoardController {
 		Map<String, Object> map = boardService.boardUpdate(paramMap, request);
 		return map;
 	}
+	
+	@RequestMapping(value="/son/board/delete.do")
+	public @ResponseBody Map<String, Object> delete(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+		
+		boardService.boardDelete(paramMap);
+		
+		return paramMap;
+	}
+	
 	
 }

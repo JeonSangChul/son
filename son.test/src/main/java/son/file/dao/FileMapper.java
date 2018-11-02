@@ -45,4 +45,7 @@ public interface FileMapper {
 	public int selectFileCnt(Map<String, Object> paramMap) throws Exception;
 	
 	public void deleteFile(Map<String, Object> paramMap) throws Exception;
+	
+	public void deleteAllFileDetail(Map<String, Object> paramMap) throws Exception;
+	
 }
