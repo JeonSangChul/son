@@ -215,5 +215,11 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		
 	}
 
+	@Override
+	public void updateViewCnt(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		boardMapper.updateViewCnt(paramMap);
+	}
+
 
 }

@@ -42,5 +42,7 @@ public interface BoardService {
 	public Map<String, Object> boardUpdate(Map<String, Object> paramMap, HttpServletRequest request) throws Exception;
 	
 	public void boardDelete(Map<String, Object> paramMap) throws Exception;
+	
+	public void updateViewCnt(Map<String, Object> paramMap) throws Exception;
 }
 

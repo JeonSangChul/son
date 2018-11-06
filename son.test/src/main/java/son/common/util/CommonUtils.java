@@ -1,4 +1,12 @@
 package son.common.util;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Component("CommonUtils")
@@ -32,4 +40,32 @@ public class CommonUtils {
 
         return ret;
     }
+	
+	public static boolean viewCntCookieChk(HttpServletRequest request
+										, HttpServletResponse response
+										, Map<String, Object> paramMap) {
+		
+		
+		Cookie cookies[] = request.getCookies();
+		Map<String, Object> ckMap = new HashMap<String, Object>();
+		
+		if(request.getCookies() != null) {
+			for(int i=0; i< cookies.length; i++) {
+				Cookie obj = cookies[i];
+				ckMap.put(obj.getName(), obj.getValue());
+				
+			}
+		}
+		
+		String cookieCnt = (String) ckMap.get("viewCnt");
+		String newCookieCnt = "||"+ paramMap.get("boardId")+"||"+ paramMap.get("idx");
+		
+		if(StringUtils.indexOfIgnoreCase(cookieCnt, newCookieCnt) == -1) {
+			Cookie cookie = new Cookie("viewCnt", cookieCnt+newCookieCnt );
+			response.addCookie(cookie);
+			return true;
+		}
+		
+		return false;
+	}
 }

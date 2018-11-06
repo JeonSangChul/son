@@ -43,4 +43,6 @@ public interface BoardMapper {
 	public void boardUpdate(Map<String, Object> paramMap) throws Exception;
 	
 	public void boardDelete(Map<String, Object> paramMap) throws Exception;
+	
+	public void updateViewCnt(Map<String, Object> paramMap) throws Exception;
 }

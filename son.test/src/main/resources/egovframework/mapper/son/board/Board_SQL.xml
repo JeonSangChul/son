@@ -175,4 +175,14 @@
     		   and idx = #{idx}
     	]]>
     </delete>
+    
+    <update id="updateViewCnt" parameterType="paramMap">
+    	<![CDATA[
+    		UPDATE board
+    		   SET view_cnt = IFNULL(view_cnt,0)+1
+    		 WHERE 1=1
+    		   and board_id = #{boardId}
+    		   and idx = #{idx}
+    	]]>
+    </update>
 </mapper>

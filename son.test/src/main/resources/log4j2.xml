@@ -1,26 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Appenders>
-        <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        <Console name="console" target="org.apache.log4j.ConsoleAppender">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5p: %c - %m%n" />
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="java.sql" level="INFO" additivity="false">
-            <AppenderRef ref="console" />
-        </Logger>
-        <Logger name="egovframework" level="DEBUG" additivity="false">
-            <AppenderRef ref="console" />
-        </Logger>
-		  <!-- log SQL with timing information, post execution -->
-	    <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+    	<Logger name="son" additivity="false" level="DEBUG">
 	        <AppenderRef ref="console" />
 	    </Logger>
+	    
+        <Logger name="jdbc.connection" additivity="false" level="WARN">
+	        <AppenderRef ref="console" />
+	    </Logger>
+	    
+	    <Logger name="jdbc.audit" additivity="false" level="WARN">
+	        <AppenderRef ref="console" />
+	    </Logger>
+	    
+	    <Logger name="jdbc.sqlonly" additivity="false" level="INFO">
+	        <AppenderRef ref="console" />
+	    </Logger>
+	    
+	    <Logger name="jdbc.sqltiming" additivity="false" level="WARN">
+	        <AppenderRef ref="console" />
+	    </Logger>
+	    
+	    <Logger name="jdbc.resultset" additivity="false" level="WARN">
+	        <AppenderRef ref="console" />
+	    </Logger>
+	    
+	    <Logger name="jdbc.resultsettable" additivity="false" level="INFO">
+	        <AppenderRef ref="console" />
+	    </Logger>
+	    
+	    <Logger name="egovframework" level="DEBUG" additivity="false">
+	    	<AppenderRef ref="console" />
+	    </Logger>
+	    
 	    <Logger name="org.springframework" level="INFO" additivity="false">
-	        <AppenderRef ref="console" />
+	    	<AppenderRef ref="console" />
 	    </Logger>
-        <Root level="ERROR">
-            <AppenderRef ref="console" />
-        </Root>
+	    <root>
+	        <priority value="off"/>
+	        <AppenderRef ref="console" />
+	    </root>
+	    
     </Loggers>
 </Configuration>

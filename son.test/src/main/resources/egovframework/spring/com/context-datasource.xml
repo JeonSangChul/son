@@ -15,53 +15,23 @@
 	<alias name="dataSource-${Globals.DbType}" alias="egov.dataSource"/>
     <alias name="dataSource-${Globals.DbType}" alias="dataSource"/>
 	
-    <!-- MySQL -->
-	<bean id="dataSource-mariaDb" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<!-- MySQL -->
+	<bean id="dataSource-mysql-spied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${Globals.DriverClassName}"/>
 		<property name="url" value="${Globals.Url}" />
 		<property name="username" value="${Globals.UserName}"/>
 		<property name="password" value="${Globals.Password}"/>
 	</bean>
 	
-	<!-- MySQL -->
-	<bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${Globals.DriverClassName}"/>
-		<property name="url" value="${Globals.Url}" />
-		<property name="username" value="${Globals.UserName}"/>
-		<property name="password" value="${Globals.Password}"/>
+	<bean id="dataSource-mysql" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSource-mysql-spied" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE"/>
+				<property name="sqlPrefix" value="###SQL###&#xD;&#xA;"/>
+			</bean>
+		</property>
 	</bean>
-
-	<!-- Oracle -->
-	<bean id="dataSource-oracle" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${Globals.DriverClassName}"/>
-		<property name="url" value="${Globals.Url}" />
-		<property name="username" value="${Globals.UserName}"/>
-		<property name="password" value="${Globals.Password}"/>
-	</bean>
-
-	<!-- Altibase -->
-	<bean id="dataSource-altibase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${Globals.DriverClassName}"/>
-		<property name="url" value="${Globals.Url}" />
-		<property name="username" value="${Globals.UserName}"/>
-		<property name="password" value="${Globals.Password}"/>
-	</bean>
-
-	<!-- Tibero -->
-	<bean id="dataSource-tibero" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${Globals.DriverClassName}"/>
-		<property name="url" value="${Globals.Url}" />
-		<property name="username" value="${Globals.UserName}"/>
-		<property name="password" value="${Globals.Password}"/>
-	</bean>
-
-    <!-- cubrid -->
-    <bean id="dataSource-cubrid" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${Globals.DriverClassName}"/>
-        <property name="url" value="${Globals.Url}" />
-        <property name="username" value="${Globals.UserName}"/>
-        <property name="password" value="${Globals.Password}"/>
-    </bean>
 
     <!-- DB Pool이 생성이 되더라고 특정 시간 호출되지 않으면 DBMS 설정에 따라 연결을 끊어질 때
 		이 경우 DBCP를 사용하셨다면.. 다음과 같은 설정을 추가하시면 연결을 유지시켜 줍니다. -->

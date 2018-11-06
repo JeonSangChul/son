@@ -127,16 +127,10 @@
 		</dependency>
 	
 	<dependency>
-            <groupId>com.googlecode.log4jdbc</groupId>
-            <artifactId>log4jdbc</artifactId>
-            <version>1.2</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+		<groupId>org.lazyluke</groupId>
+		<artifactId>log4jdbc-remix</artifactId>
+		<version>0.2.7</version>
+	</dependency>
 	
 	<dependency>
             <groupId>org.jasypt</groupId>
@@ -425,7 +419,15 @@
 			<artifactId>tiles-jsp</artifactId>
 			<version>3.0.5</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
+        </dependency> 
 	</dependencies>
+	
+	
 
 	<build>
         <defaultGoal>install</defaultGoal>

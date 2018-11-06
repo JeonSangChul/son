@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import son.board.service.BoardService;
 import son.comment.service.CommentService;
+import son.common.util.CommonUtils;
 import son.file.service.FileService;
 
 @Controller
@@ -90,7 +94,13 @@ public class BoardController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/son/board/detail.do")
-	public String detail(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+	public String detail(ModelMap model, @RequestParam Map<String, Object> paramMap
+						,HttpServletRequest request
+						,HttpServletResponse response) throws Exception {
+		
+		if(CommonUtils.viewCntCookieChk(request, response, paramMap)) boardService.updateViewCnt(paramMap);
+		
+			
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
 		List<Map<String, Object>> imgList = new ArrayList<Map<String,Object>>();
