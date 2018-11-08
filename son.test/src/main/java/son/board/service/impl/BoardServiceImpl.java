@@ -77,6 +77,9 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		
 		for(Map<String, Object> map : frmList) {
 			
+			String userIp = CommonUtils.getUserIp(request);
+			
+			map.put("userIp", userIp);
 			if( (Integer)map.get("count") > 0) {
 				fileMapper.fileInsert(map);
 			}

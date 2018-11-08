@@ -5,13 +5,15 @@
  
 <tiles-definitions>
 	<definition name="defaultLayout" template="/WEB-INF/jsp/son/common/layout/default-layouts.jsp">
+		<put-attribute name="mainHead"    value="/WEB-INF/jsp/son/common/layout/main-head.jsp" />
 		<put-attribute name="header"    value="/WEB-INF/jsp/son/common/layout/header.jsp" />
 		<put-attribute name="content"   value="" />
 		<put-attribute name="footer"    value="/WEB-INF/jsp/son/common/layout/footer.jsp" />
 	</definition>
 	
 	<definition name="boardLayout" template="/WEB-INF/jsp/son/common/layout/board/board-layouts.jsp">
-		<put-attribute name="boardHeader"    value="/WEB-INF/jsp/son/common/layout/board/board-header.jsp" />
+		<put-attribute name="mainHead"    value="/WEB-INF/jsp/son/common/layout/main-head.jsp" />
+		<put-attribute name="header"    value="/WEB-INF/jsp/son/common/layout/header.jsp" />
 		<put-attribute name="content"   value="" />
 		<put-attribute name="footer"    value="/WEB-INF/jsp/son/common/layout/footer.jsp" />
 	</definition>
@@ -24,6 +26,10 @@
 	
 	<definition name="son/main/*" extends="defaultLayout">
 	    <put-attribute name="content" value="/WEB-INF/jsp/son/main/{1}.jsp" />
+	</definition>
+	
+	<definition name="son/user/*" extends="defaultLayout">
+	    <put-attribute name="content" value="/WEB-INF/jsp/son/user/{1}.jsp" />
 	</definition>
 	
 	<definition name="son/board/*" extends="boardLayout">

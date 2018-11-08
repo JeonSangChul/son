@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import son.comment.service.CommentService;
 import son.file.service.FileService;
 
@@ -38,10 +39,35 @@ public class CommentController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/son/comment/commentList.do")
-	public String list(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+	public ModelAndView list(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		
+		if(paramMap.containsKey("pageIndex") == false){
+			paramMap.put("pageIndex","1");
+		}
+		
+		paginationInfo.setCurrentPageNo(Integer.parseInt(paramMap.get("pageIndex").toString()));
+		paginationInfo.setRecordCountPerPage(propertiesService.getInt("pageUnit"));
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		paramMap.put("start",paginationInfo.getFirstRecordIndex());
+		paramMap.put("pageSize", paginationInfo.getRecordCountPerPage());
 		
 		
-		return "son/board/list";
+		
+		List<Map<String, Object>> cmtList = commentService.selectCommentList(paramMap); 
+		int totCnt = commentService.selectCommentListTotCnt(paramMap);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		
+		paginationInfo.setTotalRecordCount(totCnt);
+		modelAndView.addObject("paginationInfo", paginationInfo);
+		
+		modelAndView.addObject("cmtList",cmtList);
+		modelAndView.setViewName("son/comment/commentList");
+		
+		return modelAndView;
 	}
 	
 	@RequestMapping(value="/son/comment/commentSave.do")
@@ -49,9 +75,26 @@ public class CommentController {
 		
 		commentService.commentSave(paramMap, request);
 		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		
+		if(paramMap.containsKey("pageIndex") == false){
+			paramMap.put("pageIndex","1");
+		}
+		
+		paginationInfo.setCurrentPageNo(Integer.parseInt(paramMap.get("pageIndex").toString()));
+		paginationInfo.setRecordCountPerPage(propertiesService.getInt("pageUnit"));
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		paramMap.put("start",paginationInfo.getFirstRecordIndex());
+		paramMap.put("pageSize", paginationInfo.getRecordCountPerPage());
+		
 		List<Map<String, Object>> cmtList = commentService.selectCommentList(paramMap); 
+		int totCnt = commentService.selectCommentListTotCnt(paramMap);
 		
 		ModelAndView modelAndView = new ModelAndView();
+		
+		paginationInfo.setTotalRecordCount(totCnt);
+		modelAndView.addObject("paginationInfo", paginationInfo);
 		
 		modelAndView.addObject("cmtList",cmtList);
 		modelAndView.setViewName("son/comment/commentList");

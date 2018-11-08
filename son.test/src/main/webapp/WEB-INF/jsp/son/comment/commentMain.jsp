@@ -28,6 +28,24 @@ $(document).ready(function (){
 	});
 });
 
+function fn_commentSearch(pageNo){
+	var param = {};
+	
+	param.boardId = "${result.boardId}";
+	param.idx = "${result.idx}";
+	param.pageIndex = pageNo;
+	
+	$.ajax({
+		type : "POST",
+		async : false,
+		url : "<c:url value='/son/comment/commentList.do'/>",
+		data : param,
+		success : function( data ){
+			$("#comtListView").html(data);
+		}
+		
+	});
+}
 
 </script>
 <div style="position: relative; margin-top: 10px;">

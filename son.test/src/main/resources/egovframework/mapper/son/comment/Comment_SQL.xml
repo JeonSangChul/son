@@ -9,10 +9,13 @@
         		   ,t1.idx
         		   ,t1.user_id
         		   ,t1.comment_content
-        		   ,t1.create_dt
+        		   ,DATE_FORMAT(t1.create_dt,'%Y-%m-%d %T') as create_dt
+        		   ,concat('(',t1.user_ip,')') as user_ip
         	  FROM board_comment t1
         	 WHERE t1.board_id = #{boardId}
         	   AND t1.idx = #{idx}
+        	 ORDER BY t1.comment_id DESC
+        	 LIMIT #{start} , #{pageSize}
         	 
         ]]>
     </select>
@@ -24,6 +27,7 @@
     				 ,idx
     				 ,user_id
     				 ,comment_content
+    				 ,user_ip
     				 ,create_dt
     				 ,update_dt
     				)
@@ -31,9 +35,19 @@
     					 ,#{idx}
     					 ,'son'
     					 ,#{commentContent}
+    					 ,#{userIp}
     					 ,now()
     					 ,now()
     					 )
     	]]>
     </insert>
+    
+    <select id="selectCommentListTotCnt" parameterType="paramMap" resultType="Integer">
+    	<![CDATA[
+    		SELECT  COUNT(*)
+        	  FROM board_comment t1
+        	 WHERE t1.board_id = #{boardId}
+        	   AND t1.idx = #{idx}
+    	]]>
+    </select>
 </mapper>

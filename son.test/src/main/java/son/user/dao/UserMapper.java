@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package son.comment.dao;
+package son.user.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +25,11 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
  * @author JeonPc
  *
  */
-@Mapper("commentMapper")
-public interface CommentMapper {
+@Mapper("userMapper")
+public interface UserMapper {
 
-	public List<Map<String, Object>> selectCommentList(Map<String, Object> paramMap) throws Exception;
+	public Map<String, Object> slectUserInfo(String username) throws Exception;
 	
-	public void commentSave(Map<String, Object> paramMap) throws Exception;
+	public void joinSave(Map<String, Object> paramMap) throws Exception;
 	
-	public int selectCommentListTotCnt(Map<String, Object> paramMap) throws Exception;
 }

@@ -68,4 +68,34 @@ public class CommonUtils {
 		
 		return false;
 	}
+	
+	public static String getUserIp(HttpServletRequest request) {
+		String userIp = request.getHeader("X-Forwarded-For");
+		
+		if(userIp ==null || userIp.length() ==0 || userIp.toLowerCase().equals("unknown")) {
+			userIp = request.getHeader("Proxy-Client-IP");
+		}
+		
+		if(userIp ==null || userIp.length() ==0 || userIp.toLowerCase().equals("unknown")) {
+			userIp = request.getHeader("WL-Proxy-Client-IP");
+		}
+		
+		if(userIp ==null || userIp.length() ==0 || userIp.toLowerCase().equals("unknown")) {
+			userIp = request.getHeader("HTTP_CLIENT_IP");
+		}
+		
+		if(userIp ==null || userIp.length() ==0 || userIp.toLowerCase().equals("unknown")) {
+			userIp = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		
+		if(userIp ==null || userIp.length() ==0 || userIp.toLowerCase().equals("unknown")) {
+			userIp = request.getHeader("REMOTE_ADDR");
+		}
+		
+		if(userIp ==null || userIp.length() ==0 || userIp.toLowerCase().equals("unknown")) {
+			userIp = request.getRemoteAddr();
+		}
+		
+		return userIp;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 MOPAS(Ministry of Public Administration and Security).
+ * Copyright 2008-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package son.comment.dao;
+package son.user.service;
 
 import java.util.List;
 import java.util.Map;
 
-import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * 
  * @author JeonPc
  *
  */
-@Mapper("commentMapper")
-public interface CommentMapper {
-
-	public List<Map<String, Object>> selectCommentList(Map<String, Object> paramMap) throws Exception;
+public interface UserService {
 	
-	public void commentSave(Map<String, Object> paramMap) throws Exception;
+	public Map<String, Object> slectUserInfo(String username) throws Exception; 
 	
-	public int selectCommentListTotCnt(Map<String, Object> paramMap) throws Exception;
+	public void joinSave(Map<String, Object> paramMap) throws Exception;
 }
+

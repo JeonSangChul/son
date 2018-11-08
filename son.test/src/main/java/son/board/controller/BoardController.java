@@ -100,6 +100,21 @@ public class BoardController {
 		
 		if(CommonUtils.viewCntCookieChk(request, response, paramMap)) boardService.updateViewCnt(paramMap);
 		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		
+		if(paramMap.containsKey("pageIndex") == false){
+			paramMap.put("pageIndex","1");
+		}
+		
+		paginationInfo.setCurrentPageNo(Integer.parseInt(paramMap.get("pageIndex").toString()));
+		paginationInfo.setRecordCountPerPage(propertiesService.getInt("pageUnit"));
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		paramMap.put("start",paginationInfo.getFirstRecordIndex());
+		paramMap.put("pageSize", paginationInfo.getRecordCountPerPage());
+		
+		
+		
 			
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
@@ -116,6 +131,12 @@ public class BoardController {
 		if("Y".equals(masterMap.get("commentYn"))) {
 			cmtList = commentService.selectCommentList(paramMap); 
 		}
+		
+		int totCnt = commentService.selectCommentListTotCnt(paramMap);
+		
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addAttribute("paginationInfo", paginationInfo);
+		
 		model.addAttribute("imgList", imgList);
 		model.addAttribute("cmtList", cmtList);
 		model.addAttribute("master", masterMap);

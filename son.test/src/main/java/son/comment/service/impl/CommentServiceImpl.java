@@ -39,8 +39,18 @@ public class CommentServiceImpl extends EgovAbstractServiceImpl implements Comme
 	public void commentSave(Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
 		
 		paramMap.put("commentContent", CommonUtils.unscript(URLDecoder.decode((String) paramMap.get("commentContent"),"UTF-8")));
+		
+		String userIp = CommonUtils.getUserIp(request);
+		
+		paramMap.put("userIp", userIp);
 		commentMapper.commentSave(paramMap);
 		
+	}
+
+	@Override
+	public int selectCommentListTotCnt(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.selectCommentListTotCnt(paramMap);
 	}
 
 

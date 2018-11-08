@@ -16,6 +16,7 @@
 		document.body.appendChild(form);
 		form.submit();
 	}
+	
 </script>
 <div style="min-height: 500px;">
 	<h3>바디</h3>

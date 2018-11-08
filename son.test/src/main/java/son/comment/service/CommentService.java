@@ -31,5 +31,6 @@ public interface CommentService {
 	
 	public void commentSave(Map<String, Object> paramMap, HttpServletRequest request) throws Exception;
 	
+	public int selectCommentListTotCnt(Map<String, Object> paramMap) throws Exception;
 }
 

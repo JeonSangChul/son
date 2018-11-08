@@ -18,7 +18,12 @@ $(document).ready(function (){
 			<li>
 				<div class="cmtInfo" style="min-height: 38px;">
 					<div class="cmtUser">
-						<c:out value="${result.userId}" />
+						<span>
+							<c:out value="${result.userId}" />
+							<span>
+								<c:out value="${result.userIp}" />
+							</span>
+						</span>
 					</div>
 					<div class="cmtContent">
 					${fn:replace(fn:escapeXml(result.commentContent),nl,'<br/>') }
@@ -30,4 +35,10 @@ $(document).ready(function (){
 			</li>
 		</c:forEach>
 	</ul>
+	
+	<c:if test="${not empty cmtList}">
+	<div class="paging">
+		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_commentSearch" />
+	</div>
+	</c:if>
 </div>

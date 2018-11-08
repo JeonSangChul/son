@@ -10,8 +10,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>게시판</title>
-<tiles:insertAttribute name="boardHeader"/>
+<tiles:insertAttribute name="mainHead"/>
 <body>
+	<tiles:insertAttribute name="header"/>
 	<div style="width: 1000px;">
 		<tiles:insertAttribute name="content"/>
 		<tiles:insertAttribute name="footer"/>

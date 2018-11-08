@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<security:http pattern="/**/*.css" security="none"/>
+	<security:http pattern="/**/*.js" security="none"/>
+	<security:http pattern="/html/**" security="none"/>
+	<security:http pattern="/images/**" security="none"/>
+
+	<security:http auto-config="true" use-expressions="true">
+		
+		<security:intercept-url pattern="/**" requires-channel="https"/>
+		<security:intercept-url pattern="/main.do" access="permitAll"/>
+		<security:intercept-url pattern="/son/user/login.do" access="isAnonymous()"/>
+		<security:intercept-url pattern="/son/user/join.do" access="isAnonymous()"/>
+		<security:intercept-url pattern="/son/board/write.do" access="hasAnyRole('BASIC' ,'ADMIN')"/>
+		<security:form-login login-page="/son/user/login.do" default-target-url="/main.do"
+							authentication-failure-url="/son/user/login.do?fail=true"/>
+		<security:intercept-url pattern="/**" access="permitAll" requires-channel="https"/>
+		
+		<security:session-management>
+			<security:concurrency-control max-sessions="1" expired-url="/son/user/login.do?fail=true" error-if-maximum-exceeded="true"/>
+		</security:session-management>
+		
+		<security:port-mappings>
+			<security:port-mapping http="8080" https="8443"/>
+		</security:port-mappings>
+		
+		<security:logout delete-cookies="true"
+				logout-success-url="/main.do"
+				logout-url="/son/user/logout.do"
+				invalidate-session="true"
+				/>
+	</security:http>
+	
+	
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<constructor-arg name="strength" value="256"></constructor-arg>
+	</bean>
+	
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="loginService">
+			<security:password-encoder ref="passwordEncoder">
+				<security:salt-source user-property="username"/>
+			</security:password-encoder>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<bean id="loginService" class="son.common.service.impl.SecurityServiceImpl" />
+	
+	
+	
+</beans>
+

@@ -21,8 +21,9 @@
         		   ,t2.idx
         		   ,t2.title
         		   ,t2.user_id
-        		   ,DATE_FORMAT(t2.create_dt,'%Y-%m-%d') as create_dt
+        		   ,DATE_FORMAT(t2.create_dt,'%Y-%m-%d %T') as create_dt
         		   ,t2.view_cnt
+        		   ,user_ip
         	  FROM board_master t1
         	      ,board t2
         	 WHERE t1.board_id = #{boardId}
@@ -49,6 +50,7 @@
         			 ,title
         			 ,content
         			 ,img_id
+        			 ,user_ip
         			 ,create_dt
         			 ,update_dt
         			)
@@ -57,6 +59,7 @@
         				 ,#{title}
         				 ,#{content}
         				 ,#{imgId}
+        				 ,#{userIp}
         				 ,now()
         				 ,now()
         				)
