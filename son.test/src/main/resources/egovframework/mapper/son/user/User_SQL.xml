@@ -31,7 +31,7 @@
     					 ,#{userName}
     					 ,#{userPassword}
     					 ,#{nickName}
-    					 ,'BASIC'
+    					 ,'ROLE_USER'
     					 ,now()
     					 ,now()
     					)

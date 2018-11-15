@@ -44,5 +44,9 @@ public interface BoardService {
 	public void boardDelete(Map<String, Object> paramMap) throws Exception;
 	
 	public void updateViewCnt(Map<String, Object> paramMap) throws Exception;
+	
+	public Map<String, Object> selectRecommend(Map<String, Object> paramMap) throws Exception;
+	
+	public void recommendSave(Map<String, Object> paramMap) throws Exception;
 }
 

@@ -3,34 +3,52 @@
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <script type="text/javascript">
 
 $(document).ready(function (){
+	
 });
+
 
 
 </script>
 <% pageContext.setAttribute("nl", "\n"); %>
 <div class="cmtList" id="cmtList" style="margin-top: 15px;" >
 	<ul >
-		<c:forEach var="result" items="${cmtList}" varStatus="status">
+		<c:forEach var="cmtList" items="${cmtList}" varStatus="status">
 			<li>
-				<div class="cmtInfo" style="min-height: 38px;">
+				<div class="cmtInfo" style="min-height: 38px; display: inline-block;">
 					<div class="cmtUser">
 						<span>
-							<c:out value="${result.userId}" />
+							<c:out value="${cmtList.userName}" />
 							<span>
-								<c:out value="${result.userIp}" />
+								<c:out value="${cmtList.userIp}" />
 							</span>
 						</span>
 					</div>
-					<div class="cmtContent">
-					${fn:replace(fn:escapeXml(result.commentContent),nl,'<br/>') }
-					</div>
+					<div class="cmtContent" id="cmtContent" ">${fn:replace(fn:escapeXml(cmtList.commentContent),nl,'<br/>') }</div >
+					
+					<div class="cmtContent" id ="cmtContentTxt" style="display:none;">
+						<textarea maxlength="600" style="width: 580px; height: 78px;"></textarea>
+					</div> 
 					<div class="cmtTime">
-						<c:out value="${result.createDt }"></c:out>
+						<c:out value="${cmtList.createDt }"></c:out>
+						<sec:authorize ifAnyGranted="ROLE_USER">
+						<sec:authentication  property="principal.userId" var="secUserId" />
+							<c:if test="${cmtList.userId == secUserId}">	
+								<div style="float: right;" >
+									<button type="button" id="commentDelete" onclick="fn_commentDelete(this)" comment-id="${cmtList.commentId}">삭제</button>
+									<button type="button" id="commentEdit"   onclick="fn_commentEdit(this)"   comment-id="${cmtList.commentId}">수정</button>
+									<button type="button" id="commentUpdate" onclick="fn_commentUpdate(this)" comment-id="${cmtList.commentId}" style="display: none;">저장</button>
+									<button type="button" id="commentCancle" onclick="fn_commentCancle(this)" comment-id="${cmtList.commentId}" style="display: none;">취소</button>
+								</div>
+							</c:if>
+						</sec:authorize>
+						
 					</div>
+					
 				</div>
 			</li>
 		</c:forEach>

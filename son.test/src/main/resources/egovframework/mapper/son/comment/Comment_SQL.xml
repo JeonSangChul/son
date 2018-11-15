@@ -11,9 +11,11 @@
         		   ,t1.comment_content
         		   ,DATE_FORMAT(t1.create_dt,'%Y-%m-%d %T') as create_dt
         		   ,concat('(',t1.user_ip,')') as user_ip
-        	  FROM board_comment t1
+        		   ,t2.user_name
+        	  FROM board_comment t1, user_info t2
         	 WHERE t1.board_id = #{boardId}
         	   AND t1.idx = #{idx}
+        	   and t1.user_id = t2.user_id
         	 ORDER BY t1.comment_id DESC
         	 LIMIT #{start} , #{pageSize}
         	 
@@ -33,7 +35,7 @@
     				)
     			VALUES	( #{boardId}
     					 ,#{idx}
-    					 ,'son'
+    					 ,#{userId}
     					 ,#{commentContent}
     					 ,#{userIp}
     					 ,now()
@@ -50,4 +52,27 @@
         	   AND t1.idx = #{idx}
     	]]>
     </select>
+    
+    <delete id="commentDelete" parameterType="paramMap">
+    	<![CDATA[
+    		delete
+    		  from board_comment
+    		 where board_id = #{boardId}
+        	   AND idx = #{idx}
+        	   and comment_id = #{commentId}
+    	]]>
+    </delete>
+    
+    <update id="commentUpdate" parameterType="paramMap">
+    	<![CDATA[
+    		update board_comment
+    		   set comment_content = #{commentContent}
+    		      ,user_ip = #{userIp}
+    		      ,update_dt = #{now}
+    		 where board_id = #{boardId}
+        	   AND idx = #{idx}
+        	   and comment_id = #{commentId}
+        	   and user_id = #{userId}
+    	]]>
+    </update>
 </mapper>

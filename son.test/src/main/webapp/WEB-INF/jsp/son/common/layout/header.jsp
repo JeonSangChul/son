@@ -14,7 +14,7 @@
 					<a href="/son/user/join.do">회원가입</a>
 				</li>
 				<li style="float: left;">
-					<a href="/son/user/login.do">로그인</a>
+					<a href="/son/user/login.do?redirectYn=Y">로그인</a>
 				</li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">

@@ -3,19 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-<!--
-    수정일          수성자                          수정내용
-   ==========      ========      =================================================
-   2011.9.19        이기하         filter 정리
-   2013.5.31        이기하         미사용 filter 정리(.mdo, .action)
 
-  ************************************************************************************************
-    0. 로그인 정책 컴포넌트용 필터 : 주석
-    1. 스프링 시큐리티 설정 : 주석
-    2. EgovSSO 로그인/로그아웃 설정을 위한 필터 설정 : 주석
-    3. Spring Security 로그인/로그아웃 설정을 위한 필터 설정 : 주석
-  ************************************************************************************************
--->
     <display-name>Default</display-name>
     <filter>
         <filter-name>encodingFilter</filter-name>
@@ -29,7 +17,16 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>*.do</url-pattern>
     </filter-mapping>
-
+	
+	<filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -39,7 +36,11 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
+	
+	<listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+	
     <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -85,6 +86,7 @@
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>egovDevIndex.jsp</welcome-file>
     </welcome-file-list>
+    
     <login-config>
         <auth-method>BASIC</auth-method>
     </login-config>
@@ -97,18 +99,14 @@
       <error-code>404</error-code>
       <location>/code404.jsp</location>
     </error-page>
+    
+    <error-page>
+      <error-code>403</error-code>
+      <location>/code404.jsp</location>
+    </error-page>
     <error-page>
       <error-code>500</error-code>
       <location>/code500.jsp</location>
     </error-page>
 	
-	<filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 </web-app>

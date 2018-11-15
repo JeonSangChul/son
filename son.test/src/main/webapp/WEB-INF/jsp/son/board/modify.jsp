@@ -216,24 +216,32 @@ function setForm(editor) {
     	type:"POST",
     	cache:false,
     	async:false,
+    	contentType:"application/x-www-form-urlencoded; charset=UTF-8",
     	url:"<c:url value='/son/board/update.do'/>",
     	data:data,
+    	beforeSend : function(xhr){
+    		xhr.setRequestHeader("AJAX-CALL", "true");
+    	},
     	success : function(data) {
+    		if(data.resultCd == "Success"){
+    			var form = document.createElement("form");
+        		form.setAttribute('method', "POST");
+        		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
+        		form.target ="_self";
+        		createInputByName(form, "boardId", data.boardId);
+        		createInputByName(form, "idx", data.idx);
+        		document.body.appendChild(form);
+    			form.submit();
+    		}else{
+    			alert("작업중 오류가 발생했습니다.");
+    			return false;
+    		}
     		//location.href = "/son/board/detail.do?boardId=${master.boardId}&idx="+data.idx;
-    		var form = document.createElement("form");
-    		form.setAttribute('method', "POST");
-    		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
-    		form.target ="_self";
-    		createInputByName(form, "boardId", data.boardId);
-    		createInputByName(form, "idx", data.idx);
-    		document.body.appendChild(form);
-			form.submit();
+    		
     	},
     	error: function(request,status,e){
-    		alert("code:"+request.status+"\n"+"messgae:"+request.responseText+"\n"+"error:"+e);
-    		//alert("업로드 중 오류가 발생하였습니다.");
-    		
-    		return false;
+    		alert("작업중 오류가 발생했습니다.");
+			return false;
     	}
     });
 }

@@ -2,9 +2,15 @@ package son.user.controller;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +25,32 @@ public class UserController {
 	@Resource(name = "userService")
 	private UserService userService;
 	
+	private RequestCache requestCache = new HttpSessionRequestCache();
+	
+	
+	@PreAuthorize("isAnonymous()")
 	@RequestMapping(value="/son/user/login.do")
-	public String list(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+	public String login(ModelMap model, @RequestParam Map<String, Object> paramMap
+			, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String redirectYn = request.getParameter("redirectYn");
+		String referer = request.getHeader("REFERER");
+		String reuri = request.getRequestURI();
+		
+		//request.get
+		if("Y".equals(redirectYn)) {
+			//requestCache.saveRequest(request, response);
+			
+			
+			
+			//SavedRequest savedRequest
+			//= requestCache.getRequest(request, response);
+			
+			
+			
+			model.addAttribute("loginRedirect", referer);
+			model.addAttribute("useReferer", "1");
+		}
 		
 		return "son/user/login";
 	}

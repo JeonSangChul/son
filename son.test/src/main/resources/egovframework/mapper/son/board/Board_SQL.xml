@@ -24,10 +24,13 @@
         		   ,DATE_FORMAT(t2.create_dt,'%Y-%m-%d %T') as create_dt
         		   ,t2.view_cnt
         		   ,user_ip
+        		   ,t3.user_name
         	  FROM board_master t1
         	      ,board t2
+        	      ,user_info t3
         	 WHERE t1.board_id = #{boardId}
         	   AND t1.board_id = t2.board_id
+        	   and t2.user_id = t3.user_id
         	  ORDER BY t2.idx desc
         	 LIMIT #{start} , #{pageSize}
         	 
@@ -55,7 +58,7 @@
         			 ,update_dt
         			)
         		values 	(#{boardId}
-        				 ,'son'
+        				 ,#{userId}
         				 ,#{title}
         				 ,#{content}
         				 ,#{imgId}
@@ -188,4 +191,64 @@
     		   and idx = #{idx}
     	]]>
     </update>
+    
+    
+    <resultMap id="recommendMap" type="java.util.HashMap">
+        <result jdbcType="INTEGER" property="goodCnt" column="good_cnt" javaType="java.lang.Integer" />
+        <result jdbcType="INTEGER" property="badCnt" column="bad_cnt" javaType="java.lang.Integer"/>
+    </resultMap>
+    
+    <select id="selectRecommend" parameterType="paramMap" resultMap="recommendMap">
+    	<![CDATA[
+    		select ifnull(sum(case when type_cd  = '1' then 1 else 0 end),0) as good_cnt
+    		      ,ifnull(sum(case when type_cd  = '2' then 1 else 0 end),0) as bad_cnt 
+    		  from board_recommend
+    		 where 1=1
+    		   and board_id = #{boardId}
+    		   and idx = #{idx}
+    	]]>
+    		   <if test='userId != null and userId !=""'>
+	    		<![CDATA[
+	    		  and user_id = #{userId}
+	    		]]>
+	    	</if>
+    </select>
+    
+    <insert id="insertRecommend" parameterType="paramMap">
+    	<![CDATA[
+    		insert into board_recommend
+    				( board_id
+    				 ,idx
+    				 ,user_id
+    				 ,type_cd
+    				 ,create_dt
+    				)
+    			values 	( #{boardId}
+    					 ,#{idx}
+    					 ,#{userId}
+    					 ,#{typeCd}
+    					 ,now()
+    					)
+    	]]>
+    </insert>
+    
+    <update id="updateRecommend" parameterType="paramMap">
+    	<![CDATA[
+    		update board_recommend
+    		   set type_cd = #{typeCd}
+    		 where board_id = #{boardId}
+    		   and idx = #{idx}
+    		   and user_id = #{userId}
+    	]]>
+    </update>
+    
+    <delete id="deleteRecommend" parameterType="paramMap">
+    	<![CDATA[
+    		delete
+    		  from board_recommend
+    		 where board_id = #{boardId}
+    		   and idx = #{idx}
+    		   and user_id = #{userId}
+    	]]>
+    </delete>
 </mapper>

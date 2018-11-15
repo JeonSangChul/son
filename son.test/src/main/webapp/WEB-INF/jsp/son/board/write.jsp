@@ -72,8 +72,7 @@
 		 
 		$("#btnCancle").click(function(){
 			var form = document.getElementById("frm")
-			form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
-			createInputByName(form, "boardId", '${master.boardId}');
+			form.setAttribute('action', "<c:url value='/son/board/list.do?boardId=${master.boardId}'/>");
 			form.submit();
 		});
 	 });
@@ -162,21 +161,30 @@ function setForm() {
     	type:"POST",
     	cache:false,
     	async:false,
+    	contentType:"application/x-www-form-urlencoded; charset=UTF-8",
     	url:"<c:url value='/son/board/save.do'/>",
     	data:data,
+    	beforeSend : function(xhr){
+    		xhr.setRequestHeader("AJAX-CALL", "true");
+    	},
     	success : function(data) {
+    		
+    		if(data.resultCd == "Success"){
+    			var form = document.createElement("form");
+        		form.setAttribute('method', "POST");
+        		form.setAttribute('action', "<c:url value='/son/board/detail.do?boardId=${master.boardId}&idx='/>"+data.idx);
+        		form.target ="_self";
+        		document.body.appendChild(form);
+    			form.submit();
+    		}else{
+    			alert("작업중 오류가 발생했습니다.");
+    			return false;
+    		}
     		//location.href = "/son/board/detail.do?boardId=${master.boardId}&idx="+data.idx;
-    		var form = document.createElement("form");
-    		form.setAttribute('method', "POST");
-    		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
-    		form.target ="_self";
-    		createInputByName(form, "boardId", '${master.boardId}');
-    		createInputByName(form, "idx", data.idx);
-    		document.body.appendChild(form);
-			form.submit();
+    		
     	},
     	error: function(request,status,e){
-    		alert("code:"+request.status+"\n"+"messgae:"+request.responseText+"\n"+"error:"+e);
+    		alert("작업중 오류가 발생했습니다.");
     		//alert("업로드 중 오류가 발생하였습니다.");
     		
     		return false;

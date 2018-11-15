@@ -3,36 +3,29 @@
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript">
 
 $(document).ready(function (){
 });
 
 function fn_search(pageNo){
-	
 	var form = document.getElementById("listForm");
-	form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
-	createInputByName(form, "boardId", '${master.boardId}');
-	createInputByName(form, "pageIndex", pageNo);
+	form.setAttribute('action', "<c:url value='/son/board/list.do?boardId=${master.boardId}&pageIndex='/>"+pageNo);
     form.submit();
 }
 
 function fn_write(){
 	
 	var form = document.getElementById("listForm");
-	form.setAttribute('action', "<c:url value='/son/board/write.do'/>");
-	createInputByName(form, "boardId", '${master.boardId}');
+	form.setAttribute('action', "<c:url value='/son/board/write.do?boardId=${master.boardId}'/>");
     form.submit();
 }
 
 function fn_detail(idx){
 	
 	var form = document.getElementById("listForm")
-	form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
-	createInputByName(form, "boardId", '${master.boardId}');
-	createInputByName(form, "idx", idx);
-    
+	form.setAttribute('action', "<c:url value='/son/board/detail.do?boardId=${master.boardId}&idx='/>"+idx);
     form.submit();
 }
 
@@ -65,7 +58,7 @@ function fn_detail(idx){
 				<tr>
 					<td class="no"><c:out value="${result.idx }"></c:out> </td>
 					<td class="tit"><a href="javascript:fn_detail('${result.idx }');"><c:out value="${result.title }"></c:out></a> </td>
-					<td class="tit"><c:out value="${result.userId }"></c:out> </td>
+					<td class="tit"><c:out value="${result.userName }"></c:out> </td>
 					<td class="date"><c:out value="${result.createDt }"></c:out> </td>
 					<td class="no"><c:out value="${result.viewCnt }"></c:out> </td>
 				</tr>

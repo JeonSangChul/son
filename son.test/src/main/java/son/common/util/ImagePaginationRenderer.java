@@ -1,4 +1,4 @@
-package egovframework.com.cmm;
+package son.common.util;
 
 import egovframework.rte.ptl.mvc.tags.ui.pagination.AbstractPaginationRenderer;
 

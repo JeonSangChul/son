@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,7 @@ public class CommentController {
 		return modelAndView;
 	}
 	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/comment/commentSave.do")
 	public ModelAndView commentSave(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
 		
@@ -97,6 +99,73 @@ public class CommentController {
 		modelAndView.addObject("paginationInfo", paginationInfo);
 		
 		modelAndView.addObject("cmtList",cmtList);
+		modelAndView.addObject("resultCd","Success");
+		modelAndView.setViewName("son/comment/commentList");
+		return modelAndView;
+	}
+	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@RequestMapping(value="/son/comment/commentDelete.do")
+	public ModelAndView commentDelete(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+		
+		commentService.commentDelete(paramMap, request);
+		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		
+		if(paramMap.containsKey("pageIndex") == false){
+			paramMap.put("pageIndex","1");
+		}
+		
+		paginationInfo.setCurrentPageNo(Integer.parseInt(paramMap.get("pageIndex").toString()));
+		paginationInfo.setRecordCountPerPage(propertiesService.getInt("pageUnit"));
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		paramMap.put("start",paginationInfo.getFirstRecordIndex());
+		paramMap.put("pageSize", paginationInfo.getRecordCountPerPage());
+		
+		List<Map<String, Object>> cmtList = commentService.selectCommentList(paramMap); 
+		int totCnt = commentService.selectCommentListTotCnt(paramMap);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		
+		paginationInfo.setTotalRecordCount(totCnt);
+		modelAndView.addObject("paginationInfo", paginationInfo);
+		
+		modelAndView.addObject("cmtList",cmtList);
+		modelAndView.addObject("resultCd","Success");
+		modelAndView.setViewName("son/comment/commentList");
+		return modelAndView;
+	}
+	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@RequestMapping(value="/son/comment/commentUpdate.do")
+	public ModelAndView commentUpdate(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+		
+		commentService.commentUpdate(paramMap, request);
+		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		
+		if(paramMap.containsKey("pageIndex") == false){
+			paramMap.put("pageIndex","1");
+		}
+		
+		paginationInfo.setCurrentPageNo(Integer.parseInt(paramMap.get("pageIndex").toString()));
+		paginationInfo.setRecordCountPerPage(propertiesService.getInt("pageUnit"));
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		paramMap.put("start",paginationInfo.getFirstRecordIndex());
+		paramMap.put("pageSize", paginationInfo.getRecordCountPerPage());
+		
+		List<Map<String, Object>> cmtList = commentService.selectCommentList(paramMap); 
+		int totCnt = commentService.selectCommentListTotCnt(paramMap);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		
+		paginationInfo.setTotalRecordCount(totCnt);
+		modelAndView.addObject("paginationInfo", paginationInfo);
+		
+		modelAndView.addObject("cmtList",cmtList);
+		modelAndView.addObject("resultCd","Success");
 		modelAndView.setViewName("son/comment/commentList");
 		return modelAndView;
 	}

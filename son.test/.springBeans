@@ -12,11 +12,8 @@
 		<config>src/main/webapp/WEB-INF/config/egovframework/springmvc/egov-com-servlet.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-properties.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-mapper.xml</config>
-		<config>src/main/resources/egovframework/spring/com/context-aspect.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-datasource.xml</config>
-		<config>src/main/resources/egovframework/spring/com/context-sqlMap.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-validator.xml</config>
-		<config>src/main/resources/egovframework/spring/com/idgn/context-idgn-File.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-security.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-common.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-transaction.xml</config>

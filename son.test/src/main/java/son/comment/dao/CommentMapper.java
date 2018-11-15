@@ -33,4 +33,8 @@ public interface CommentMapper {
 	public void commentSave(Map<String, Object> paramMap) throws Exception;
 	
 	public int selectCommentListTotCnt(Map<String, Object> paramMap) throws Exception;
+	
+	public void commentDelete(Map<String, Object> paramMap) throws Exception;
+	
+	public void commentUpdate(Map<String, Object> paramMap) throws Exception;
 }

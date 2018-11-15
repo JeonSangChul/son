@@ -17,12 +17,26 @@ $(document).ready(function (){
 		
 		$.ajax({
 			type : "POST",
+			cache:false,
 			async : false,
+			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			url : "<c:url value='/son/comment/commentSave.do'/>",
 			data : param,
+			beforeSend : function(xhr){
+	    		xhr.setRequestHeader("AJAX-CALL", "true");
+	    	},
 			success : function( data ){
-				$("#cmtList").html(data);
-			}
+				if(data.resultCd == "Success"){
+					$("#cmtList").html(data);
+				}else{
+					alert("작업중 오류가 발생했습니다.");
+        			return false;
+				}
+				
+			},error: function(request,status,e){
+    			alert("작업중 오류가 발생했습니다.");
+    			return;
+    		}
 			
 		});
 	});

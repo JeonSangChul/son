@@ -3,6 +3,7 @@
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <link rel="stylesheet" href="/daumeditor/css/editor.css" type="text/css" charset="utf-8"/>
 <script src="/daumeditor/js/editor_loader.js" type="text/javascript" charset="utf-8"></script>
 
@@ -15,8 +16,7 @@
 		//목록화면에서 페이징한거 몇 페이지인지 읽어서 가도록 해야 되나?
 		$("#btnList").click(function(){
 			var form = document.getElementById("frm")
-			form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
-			createInputByName(form, "boardId", '${master.boardId}');
+			form.setAttribute('action', "<c:url value='/son/board/list.do'/>"+"?boardId=${master.boardId}");
 			form.submit();
 		});
 
@@ -25,9 +25,7 @@
 		//form도 그냥 그려 두지 말고 스크립트 단에서 그릴까?
 		$("#btnModify").click(function(){
 			var form = document.getElementById("frm")
-			form.setAttribute('action', "<c:url value='/son/board/modify.do'/>");
-			createInputByName(form, "boardId", '${master.boardId}');
-			createInputByName(form, "idx", '${result.idx}');
+			form.setAttribute('action', "<c:url value='/son/board/modify.do'/>"+"?boardId=${master.boardId}&idx=${result.idx}");
             form.submit();
 		 });
 		
@@ -37,25 +35,80 @@
 				type:"POST",
 		    	cache:false,
 		    	async:false,
+		    	contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 		    	url:"<c:url value='/son/board/delete.do'/>",
 		    	data:{boardId : '${master.boardId}'
 		    		 ,idx : '${result.idx}'
 		    		 ,imgId : '${result.imgId}'
 		    		},
+	    		beforeSend : function(xhr){
+		    		xhr.setRequestHeader("AJAX-CALL", "true");
+		    	},
 	    		success : function(data) {
-	    			var form = document.getElementById("frm")
-	    			form.setAttribute('action', "<c:url value='/son/board/list.do'/>");
-	    			createInputByName(form, "boardId", data.boardId);
-	    			createInputByName(form, "idx", data.Idx);
-	                form.submit();
+	    			if(data.resultCd == "Success"){
+	    				var form = document.getElementById("frm")
+		    			form.setAttribute('action', "<c:url value='/son/board/list.do'/>"+"?boardId=${master.boardId}");
+		                form.submit();
+	    			}else{
+	        			alert("작업중 오류가 발생했습니다.");
+	        			return false;
+	        		}
+	    			
 	    		},
 	    		error: function(request,status,e){
-	    			alert("삭제중 오류가 발생하였습니다.");
+	    			alert("작업중 오류가 발생했습니다.");
 	    			return;
 	    		}
 			});
 		 });
+		
+		$("#btnGood").click(function(){
+			recommend("1");
+		});
+		
+		$("#btnBad").click(function(){
+			
+			recommend("2");
+		});
 	 });
+	
+	
+	function recommend(type){
+		<sec:authorize access="isAnonymous()">
+			alert("로그인이 필요한 서비스 입니다.");
+			return ;
+		</sec:authorize>
+		
+		
+		$.ajax({
+			type:"POST",
+			cache:false,
+	    	async:false,
+	    	contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+	    	url:"<c:url value='/son/board/recommend.do'/>",
+	    	data:{boardId : '${master.boardId}'
+	    		 ,idx : '${result.idx}'
+	    		 ,typeCd:type
+	    		},
+	    	beforeSend : function(xhr){
+	    		xhr.setRequestHeader("AJAX-CALL", "true");
+	    	},
+    		success : function(data) {
+    			if(data.resultCd == "Success"){
+    				$("#recommentGoodCnt").html(data.goodCnt);
+        			$("#recommentBadCnt").html(data.badCnt);
+    			}else{
+    				alert("작업중 오류가 발생하였습니다.");
+        			return;
+    			}
+    			
+    		},
+    		error: function(request,status,e){
+    			alert("작업중 오류가 발생하였습니다.");
+    			return;
+    		}
+		});
+	}
 
 </script>
 
@@ -82,11 +135,21 @@
 			</div>
 			
 		</c:if>
-		
+		<%-- <sec:authorize ifAllGranted="ROLE_USER"> --%>
+			<div>
+				<button type="button" id="btnGood">추천</button><span id="recommentGoodCnt">${recommedMap.goodCnt }</span>
+				<button type="button" id="btnBad">비추천</button><span id="recommentBadCnt">${recommedMap.badCnt }</span>
+			</div>
+		<%-- </sec:authorize> --%>
 		<div class="btnArea">
 			<button type="button" class="btnList" id ="btnList"><em>목록보기</em></button>
-			<button type="button" class="btnModify" id ="btnModify"><em>수정</em></button>
-			<button type="button" class="btnDelete" id ="btnDelete">삭제</button>
+			<sec:authorize ifAnyGranted="ROLE_USER">
+				<sec:authentication  property="principal.userId" var="secUserId" />
+				<c:if test="${result.userId == secUserId}">
+					<button type="button" class="btnModify" id ="btnModify"><em>수정</em></button>
+					<button type="button" class="btnDelete" id ="btnDelete">삭제</button>
+				</c:if>
+			</sec:authorize>
 		</div>
 		
 	</div> 

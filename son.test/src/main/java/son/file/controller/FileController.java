@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import egovframework.com.cmm.util.EgovBasicLogger;
-import egovframework.com.cmm.util.EgovResourceCloseHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import son.board.service.BoardService;
 import son.file.service.FileService;
@@ -316,12 +314,18 @@ public class FileController {
 
 				FileCopyUtils.copy(in, out);
 				out.flush();
-			} catch (IOException ex) {
+			} catch (IOException e) {
 				// 다음 Exception 무시 처리
 				// Connection reset by peer: socket write error
-				EgovBasicLogger.ignore("IO Exception", ex);
+				LOGGER.debug(getClass().getName()+ " "+e.getMessage());
 			} finally {
-				EgovResourceCloseHelper.close(in, out);
+				try {
+					in.close();
+					out.close();
+				} catch (Exception ex) {
+					LOGGER.debug(getClass().getName()+ " "+ex.getMessage());
+				}
+				
 			}
 		}else{
 			response.setContentType("application/x-msdownload");

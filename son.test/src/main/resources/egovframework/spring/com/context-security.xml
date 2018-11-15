@@ -6,23 +6,20 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
-
+	
 	<security:http pattern="/**/*.css" security="none"/>
 	<security:http pattern="/**/*.js" security="none"/>
 	<security:http pattern="/html/**" security="none"/>
 	<security:http pattern="/images/**" security="none"/>
 
-	<security:http auto-config="true" use-expressions="true">
+	<security:http auto-config="true" use-expressions="true"   >
 		
-		<security:intercept-url pattern="/**" requires-channel="https"/>
-		<security:intercept-url pattern="/main.do" access="permitAll"/>
-		<security:intercept-url pattern="/son/user/login.do" access="isAnonymous()"/>
-		<security:intercept-url pattern="/son/user/join.do" access="isAnonymous()"/>
-		<security:intercept-url pattern="/son/board/write.do" access="hasAnyRole('BASIC' ,'ADMIN')"/>
+		<security:intercept-url pattern="/**" requires-channel="https" access="permitAll"  />
 		<security:form-login login-page="/son/user/login.do" default-target-url="/main.do"
-							authentication-failure-url="/son/user/login.do?fail=true"/>
-		<security:intercept-url pattern="/**" access="permitAll" requires-channel="https"/>
-		
+			authentication-success-handler-ref="securityLoginSuccessHandler"
+			authentication-failure-url="/son/user/login.do?fail=true" />
+		  
+		<!-- authentication-failure-url="securityLoginFailureHandler" -->
 		<security:session-management>
 			<security:concurrency-control max-sessions="1" expired-url="/son/user/login.do?fail=true" error-if-maximum-exceeded="true"/>
 		</security:session-management>
@@ -36,6 +33,9 @@
 				logout-url="/son/user/logout.do"
 				invalidate-session="true"
 				/>
+				
+		<security:access-denied-handler ref="securityDeniedHandler"/>
+		
 	</security:http>
 	
 	
@@ -53,7 +53,26 @@
 	
 	<bean id="loginService" class="son.common.service.impl.SecurityServiceImpl" />
 	
+	<bean id="securityDeniedHandler" class="son.common.service.impl.SecurityDeniedHandler">
+		<property name="errorPage" value="/son/common/denied.do"></property>
+	</bean>
 	
+	<bean id="securityLoginSuccessHandler" class="son.common.service.impl.SecurityLoginSuccessHandler">
+		<property name="targetUrlParameter" value="loginRedirect" />
+		<property name="useReferer" value="false"/>
+		<property name="defaultUrl" value="/main.do"></property>
+	</bean>
+	<!-- 
+	<bean id="securityLoginFailureHandler" class="son.common.service.impl.SecurityLoginFailureHandler">
+		<property name="loginIdName" value="j_username" />
+		<property name="loginPasswordName" value="j_password"/>
+		<property name="loginRedirectName" value="loginRedirect"/>
+	</bean> -->
 	
+	<!-- <bean id="authenticationEntryPoint" class="son.common.service.impl.SecurityAuthenticationEntryPoint">
+        <constructor-arg value="/son/user/login.do" />
+    </bean> -->
+    
 </beans>
+
 

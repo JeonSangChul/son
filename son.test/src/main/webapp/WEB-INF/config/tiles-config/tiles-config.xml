@@ -23,6 +23,9 @@
 		<put-attribute name="content"   value="" />
 	</definition>
 	
+	<definition name="son/common/*" extends="defaultLayout">
+	    <put-attribute name="content" value="/WEB-INF/jsp/son/common/{1}.jsp" />
+	</definition>
 	
 	<definition name="son/main/*" extends="defaultLayout">
 	    <put-attribute name="content" value="/WEB-INF/jsp/son/main/{1}.jsp" />

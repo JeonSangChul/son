@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,7 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import son.board.service.BoardService;
 import son.comment.service.CommentService;
 import son.common.util.CommonUtils;
+import son.common.vo.SecurityDto;
 import son.file.service.FileService;
 
 @Controller
@@ -52,6 +55,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/son/board/list.do")
 	public String list(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		//나중에 공통으로 
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
@@ -120,6 +124,9 @@ public class BoardController {
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
 		List<Map<String, Object>> imgList = new ArrayList<Map<String,Object>>();
 		List<Map<String, Object>> cmtList = new ArrayList<Map<String,Object>>();
+		
+		Map<String, Object> recommedMap = boardService.selectRecommend(paramMap);
+		
 		model.addAttribute("result", resultMap);
 		
 		//파일id가 있을시 파일정보조회
@@ -140,6 +147,7 @@ public class BoardController {
 		model.addAttribute("imgList", imgList);
 		model.addAttribute("cmtList", cmtList);
 		model.addAttribute("master", masterMap);
+		model.addAttribute("recommedMap", recommedMap);
 		return "son/board/detail";
 	}
 	
@@ -150,7 +158,9 @@ public class BoardController {
 	 * @return
 	 * @throws Exception
 	 */
+	
 	@RequestMapping(value="/son/board/write.do")
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	public String write(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		model.addAttribute("master", masterMap);
@@ -165,10 +175,12 @@ public class BoardController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/modify.do")
 	public String modify(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
+		
 		List<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
 		if(resultMap.get("imgId") != null){
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -179,6 +191,7 @@ public class BoardController {
 		model.addAttribute("result", resultMap);
 		model.addAttribute("master", masterMap);
 		model.addAttribute("fileList", fileList);
+		
 		return "son/board/modify";
 	}
 	
@@ -189,6 +202,7 @@ public class BoardController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/imagePopup.do")
 	public String imagePopup(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
 		
@@ -202,6 +216,7 @@ public class BoardController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/filePopup.do")
 	public String filePopup(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
 		
@@ -216,27 +231,46 @@ public class BoardController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/save.do")
 	public @ResponseBody Map<String, Object> save(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
 		
 		Map<String, Object> map = boardService.boardInsert(paramMap, request);
-		
+		map.put("resultCd", "Success");
 		return map;
 	}
-	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/update.do")
 	public @ResponseBody Map<String, Object> update(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
 		
 		Map<String, Object> map = boardService.boardUpdate(paramMap, request);
+		map.put("resultCd", "Success");
 		return map;
 	}
-	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/delete.do")
 	public @ResponseBody Map<String, Object> delete(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
 		
 		boardService.boardDelete(paramMap);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resultCd", "Success");
+		return map;
+	}
+	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@RequestMapping(value="/son/board/recommend.do")
+	public @ResponseBody Map<String, Object> recommend(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
 		
-		return paramMap;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
+		
+		paramMap.put("userId", securityDto.getUserId());
+		boardService.recommendSave(paramMap);
+		paramMap.remove("userId");
+		Map<String, Object> map = boardService.selectRecommend(paramMap);
+		map.put("resultCd", "Success");
+		return map;
 	}
 	
 	

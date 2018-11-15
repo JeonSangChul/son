@@ -13,12 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import son.board.dao.BoardMapper;
 import son.board.service.BoardService;
 import son.common.util.CommonUtils;
+import son.common.vo.SecurityDto;
 import son.file.dao.FileMapper;
 
 /**
@@ -66,6 +69,12 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		List<Map<String,Object>> frmList = new ArrayList<Map<String, Object>>();
 		List<Map<String,Object>> fileList = new ArrayList<Map<String, Object>>();
 		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
+		
+		String sUserId = securityDto.getUserId();
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(paramMap.get("frmData") != null) {
 			frmList =  mapper.readValue((String) paramMap.get("frmData"), List.class);
@@ -78,7 +87,7 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		for(Map<String, Object> map : frmList) {
 			
 			String userIp = CommonUtils.getUserIp(request);
-			
+			map.put("userId", sUserId);
 			map.put("userIp", userIp);
 			if( (Integer)map.get("count") > 0) {
 				fileMapper.fileInsert(map);
@@ -222,6 +231,40 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	public void updateViewCnt(Map<String, Object> paramMap) throws Exception {
 		// TODO Auto-generated method stub
 		boardMapper.updateViewCnt(paramMap);
+	}
+
+	@Override
+	public Map<String, Object> selectRecommend(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		return boardMapper.selectRecommend(paramMap);
+	}
+
+	@Override
+	public void recommendSave(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		
+		
+		
+		Map<String, Object> map = boardMapper.selectRecommend(paramMap);
+		
+		if((Integer)map.get("goodCnt") == 0 && (Integer)map.get("badCnt") == 0) {
+			boardMapper.insertRecommend(paramMap);
+		}else {
+			if((Integer)map.get("goodCnt") > 0){
+				if("1".equals(paramMap.get("typeCd"))) {
+					boardMapper.deleteRecommend(paramMap);
+				}else {
+					boardMapper.updateRecommend(paramMap);
+				}
+			}else {
+				if("1".equals(paramMap.get("typeCd"))) {
+					boardMapper.updateRecommend(paramMap);
+				}else {
+					boardMapper.deleteRecommend(paramMap);
+				}
+			}
+		}
+		
 	}
 
 
