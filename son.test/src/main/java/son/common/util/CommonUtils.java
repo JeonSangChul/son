@@ -52,7 +52,10 @@ public class CommonUtils {
 		if(request.getCookies() != null) {
 			for(int i=0; i< cookies.length; i++) {
 				Cookie obj = cookies[i];
-				ckMap.put(obj.getName(), obj.getValue());
+				if("viewCnt".equals(obj.getName())) {
+					ckMap.put(obj.getName(), obj.getValue());
+				}
+				
 				
 			}
 		}

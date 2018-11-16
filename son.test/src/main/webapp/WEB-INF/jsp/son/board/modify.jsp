@@ -120,6 +120,12 @@
 		$("#save_button").click(function(){
 			setForm();
 	    })
+	    
+	    $("#btnCancle").click(function(){
+			var form = document.getElementById("frm")
+			form.setAttribute('action', "<c:url value='/son/board/list.do?boardId=${result.boardId}'/>");
+			form.submit();
+		});
 	 });
     //form submit 버튼 클릭
 
@@ -146,6 +152,9 @@ function validForm(editor) {
 
 //validForm 함수까지 true값을 받으면 이어서 form submit을 시켜주는  setForm함수
 function setForm(editor) {
+	if(!validForm(Editor)) return;
+	if(!confirm("저장 하시겠습니까?")) return;
+	
 	var i, input;
 	var content = Editor.getContent();
 	
@@ -210,6 +219,7 @@ function setForm(editor) {
     frmData["boardId"] = '${result.boardId}';
     frmData["idx"] = '${result.idx}';
     frmData["imgId"] = '${result.imgId}';
+    frmData["userId"] = '${result.userId}';
     
     data["frmData"] = "["+JSON.stringify(frmData)+"];";
     $.ajax({
@@ -226,18 +236,14 @@ function setForm(editor) {
     		if(data.resultCd == "Success"){
     			var form = document.createElement("form");
         		form.setAttribute('method', "POST");
-        		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>");
+        		form.setAttribute('action', "<c:url value='/son/board/detail.do'/>"+"?boardId="+data.boardId+"&idx="+data.idx);
         		form.target ="_self";
-        		createInputByName(form, "boardId", data.boardId);
-        		createInputByName(form, "idx", data.idx);
         		document.body.appendChild(form);
     			form.submit();
     		}else{
     			alert("작업중 오류가 발생했습니다.");
     			return false;
     		}
-    		//location.href = "/son/board/detail.do?boardId=${master.boardId}&idx="+data.idx;
-    		
     	},
     	error: function(request,status,e){
     		alert("작업중 오류가 발생했습니다.");
@@ -263,7 +269,7 @@ function setForm(editor) {
     </dl>
     
     <div class="btnArea">
-		<button type="button" class="btnW btnCancle">취소하기</button>
+		<button type="button" class="btnW btnCancle" id="btnCancle">취소하기</button>
 		<button type="button" id="save_button" name="save_button">저장하기</button>
 	</div>
 	</form>

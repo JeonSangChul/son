@@ -136,7 +136,7 @@ TrexConfig.addEmbeder(
 
             var youtubeMovieKey = getYouTubeMovieKey(url);
             if (youtubeMovieKey) {
-                return "<iframe src=\"http://www.youtube.com/embed/" + youtubeMovieKey + "\" width='"+size.width+"' height='"+size.height+"' frameborder=\"0\" allowfullscreen></iframe>";
+                return "<iframe src=\"https://www.youtube.com/embed/" + youtubeMovieKey + "\" width='"+size.width+"' height='"+size.height+"' frameborder=\"0\" allowfullscreen></iframe>";
             }
 
             return _NULL;
@@ -275,6 +275,7 @@ TrexConfig.addEmbeder(
 	}
 		
 	function convertToHtml(content) {
+		alert("11");
 		if ($tx.msie) { //NOTE: #FTDUEDTR-366 + #FTDUEDTR-372 -> #FTDUEDTR-403
             if ($tx.msie_ver < 10) {
                 content = content.replace(/<iframe[^>]*src=("|'|)https?:\/\/www\.youtube\.com\/embed\/(\w+)\1[^>]*><\/iframe>/i, function (html, quote, vid) {

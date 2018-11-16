@@ -20,16 +20,16 @@
 			form.submit();
 		});
 
-		//수정하기
-		//idx 값을 히든으로 만들어 두는게 아니라 수정눌럿을시 실시간으로 생성해서 넘기도록..
-		//form도 그냥 그려 두지 말고 스크립트 단에서 그릴까?
 		$("#btnModify").click(function(){
 			var form = document.getElementById("frm")
 			form.setAttribute('action', "<c:url value='/son/board/modify.do'/>"+"?boardId=${master.boardId}&idx=${result.idx}");
+			
             form.submit();
 		 });
 		
 		$("#btnDelete").click(function(){
+			if(!confirm("삭제 하시겠습니까?")) return;
+			
 			
 			$.ajax({
 				type:"POST",

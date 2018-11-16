@@ -10,10 +10,19 @@
 $(document).ready(function (){
 	$("#cmtSave").click(function(){
 		var param = {};
+		var commentContent = $("#commentContent").val();
+		
+		if(trim(commentContent).length == 0){
+			alert("댓글 내용을 입력해 주십시오.");
+			$("#commentContent").focus();
+			return;
+		}
+		
+		if(!confirm("댓글을 저장 하시겠습니까?")) return;
 		
 		param.boardId = "${result.boardId}";
 		param.idx = "${result.idx}";
-		param.commentContent = encodeURIComponent($("#commentContent").val());
+		param.commentContent = encodeURIComponent(commentContent);
 		
 		$.ajax({
 			type : "POST",
@@ -36,36 +45,6 @@ $(document).ready(function (){
 		});
 	});
 	
-	
-	/* $("#commentDelete").click(function(){
-	var commentId = $(this).attr('comment-id');
-	
-	var param = {};
-	
-	param.boardId = "${result.boardId}";
-	param.idx = "${result.idx}";
-	param.commentId = commentId;
-	
-	$.ajax({
-		type : "POST",
-		cache:false,
-		async : false,
-		contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-		url : "<c:url value='/son/comment/commentDelete.do'/>",
-		data : param,
-		beforeSend : function(xhr){
-    		xhr.setRequestHeader("AJAX-CALL", "true");
-    	},
-		success : function( data ){
-			$("#comtListView").html(data);
-			$("#commentContent").val("");
-		},error: function(request,status,e){
-			alert("작업중 오류가 발생했습니다.");
-			return;
-		}
-		
-	});
-}) */
 	
 });
 
@@ -95,6 +74,10 @@ function fn_commentSearch(pageNo){
 }
 
 function fn_commentDelete(obj){
+	
+	
+	if(!confirm("댓글을 삭제 하시겠습니까?")) return;
+	
 	var commentId = $(obj).attr('comment-id');
 	
 	var param = {};
@@ -144,6 +127,15 @@ function fn_commentUpdate(obj){
 	var commentContentTxt = $(obj).parent().parent().parent().find("#cmtContentTxt textarea").text();
 	var param = {};
 	
+	if(trim(commentContentTxt).length == 0){
+		alert("댓글 내용을 입력해 주십시오.");
+		$(obj).parent().parent().parent().find("#cmtContentTxt textarea").focus();
+		return;
+	}
+	
+	if(!confirm("댓글을 저장 하시겠습니까?")) return;
+	
+	
 	param.boardId = "${result.boardId}";
 	param.idx = "${result.idx}";
 	param.commentId = commentId;
@@ -173,6 +165,9 @@ function fn_commentUpdate(obj){
 }
 
 function fn_commentCancle(obj){
+	
+	if(!confirm("댓글 수정을 취소 하시겠습니까?")) return;
+	
 	var cmtContent = $(obj).parent().parent().parent().find("#cmtContent");
 	var cmtContentTxt = $(obj).parent().parent().parent().find("#cmtContentTxt");
 	$(obj).parent().parent().parent().find("#cmtContentTxt textarea").text("");

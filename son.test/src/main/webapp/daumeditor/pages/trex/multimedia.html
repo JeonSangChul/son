@@ -56,6 +56,7 @@
 		var types = document.getElementsByName("codeType");
 		if (types[1].checked) {
 			_data.url = document.getElementsByName("url")[0].value.trim();
+			alert(_data.url);
 		} else if (types[0].checked) {
 			_data.code = document.getElementsByName("source")[0].value.trim();
 		}

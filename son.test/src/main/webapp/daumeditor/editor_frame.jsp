@@ -26,7 +26,7 @@
 						</li>
 						<li class="tx-list">
 							<div unselectable="on" id="tx_media" class="tx-media tx-btn-trans">
-								<a href="javascript:;" title="외부컨텐츠" class="tx-text">외부컨텐츠</a>
+								<a href="javascript:;" title="동영상" class="tx-text">동영상</a>
 							</div>
 						</li>
 						<li class="tx-list tx-list-extra">

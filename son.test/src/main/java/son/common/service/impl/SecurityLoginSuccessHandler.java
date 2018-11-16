@@ -3,6 +3,7 @@ package son.common.service.impl;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,6 +19,8 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
+
+import son.common.vo.SecurityDto;
 
 /**
  * 
@@ -75,6 +78,10 @@ public class SecurityLoginSuccessHandler implements AuthenticationSuccessHandler
 		clearAuthenticationAttributes(request);
 		
 		int intRedirectStrategy = deciedRedirectStrategy(request, response);
+		
+		SecurityDto securityDto = (SecurityDto)authentication.getPrincipal();
+		Cookie cookie = new Cookie("loginId",securityDto.getEmail());
+		response.addCookie(cookie);
 		
 		switch (intRedirectStrategy) {
 		case 1:

@@ -19,12 +19,13 @@ $(document).ready(function (){
 </script>
 <div>
 	<form name="f" id="f"  method="POST" action="<c:url value='/j_spring_security_check' />">
-		<input type="text" name="j_username" id="j_username" value="" required>
+		<input type="text" name="j_username" id="j_username" value="${loginId }" required>
 		<input type="text" name="j_password" id="j_password" value="" required>
 		
 		<input type="text" name="loginRedirect" id="loginRedirect" value="${loginRedirect }" >
 		<input type="text" name="useReferer" id="useReferer" value="${useReferer }" >
 		
+		<input type="checkbox"  name="_spring_security_remember_me" id="remember-me"> 자동 로그인
 		<button type="submit" name="btnLogin" id="btnLogin" >로그인</button>
 		
 		<c:if test="${not empty param.fail }">

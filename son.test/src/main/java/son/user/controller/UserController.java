@@ -2,6 +2,7 @@ package son.user.controller;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,16 +38,20 @@ public class UserController {
 		String referer = request.getHeader("REFERER");
 		String reuri = request.getRequestURI();
 		
+		Cookie cookies[] = request.getCookies();
+		
+		if(request.getCookies() != null) {
+			for(int i=0; i< cookies.length; i++) {
+				Cookie obj = cookies[i];
+				if("loginId".equals(obj.getName())) {
+					model.addAttribute("loginId", obj.getValue());
+				}
+			}
+		}
+		
+		
 		//request.get
 		if("Y".equals(redirectYn)) {
-			//requestCache.saveRequest(request, response);
-			
-			
-			
-			//SavedRequest savedRequest
-			//= requestCache.getRequest(request, response);
-			
-			
 			
 			model.addAttribute("loginRedirect", referer);
 			model.addAttribute("useReferer", "1");

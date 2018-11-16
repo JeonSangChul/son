@@ -107,6 +107,8 @@ function validForm(editor) {
 function setForm() {
 	if(!validForm(Editor)) return;
 	
+	if(!confirm("저장 하시겠습니까?")) return;
+	
 	var i, input;
 	var content = Editor.getContent();
 	

@@ -177,20 +177,28 @@ public class BoardController {
 	 */
 	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/modify.do")
-	public String modify(ModelMap model, @RequestParam Map<String, Object> paramMap) throws Exception {
+	public String modify(ModelMap model, @RequestParam Map<String, Object> paramMap
+				,HttpServletRequest request, HttpServletResponse response
+				,Authentication auth) throws Exception {
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		Map<String, Object> resultMap = boardService.selectBoardDetail(paramMap);
 		
-		List<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
-		if(resultMap.get("imgId") != null){
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("imgId", resultMap.get("imgId"));
-			fileList = fileService.selectFileList(map);
+		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
+		
+		if(!String.valueOf(resultMap.get("userId")).equals(securityDto.getUserId())) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "게시물 수정 권한이 없습니다");
+		}else {
+			List<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
+			if(resultMap.get("imgId") != null){
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("imgId", resultMap.get("imgId"));
+				fileList = fileService.selectFileList(map);
+			}
+			//파일정보 조회 로직 추가 해야함..
+			model.addAttribute("result", resultMap);
+			model.addAttribute("master", masterMap);
+			model.addAttribute("fileList", fileList);
 		}
-		//파일정보 조회 로직 추가 해야함..
-		model.addAttribute("result", resultMap);
-		model.addAttribute("master", masterMap);
-		model.addAttribute("fileList", fileList);
 		
 		return "son/board/modify";
 	}
@@ -241,10 +249,18 @@ public class BoardController {
 	}
 	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value="/son/board/update.do")
-	public @ResponseBody Map<String, Object> update(ModelMap model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+	public @ResponseBody Map<String, Object> update(ModelMap model, @RequestParam Map<String, Object> paramMap
+			,HttpServletRequest request, HttpServletResponse response
+			,Authentication auth) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
 		
-		Map<String, Object> map = boardService.boardUpdate(paramMap, request);
-		map.put("resultCd", "Success");
+		if(!String.valueOf(paramMap.get("userId")).equals(securityDto.getUserId())) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "게시물 수정 권한이 없습니다");
+		}else {
+			map = boardService.boardUpdate(paramMap, request);
+			map.put("resultCd", "Success");
+		}
 		return map;
 	}
 	@Secured({"ROLE_ADMIN","ROLE_USER"})
