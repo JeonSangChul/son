@@ -29,7 +29,7 @@ public class UserController {
 	private RequestCache requestCache = new HttpSessionRequestCache();
 	
 	
-	@PreAuthorize("isAnonymous()")
+	//@PreAuthorize("isAnonymous()")
 	@RequestMapping(value="/son/user/login.do")
 	public String login(ModelMap model, @RequestParam Map<String, Object> paramMap
 			, HttpServletRequest request, HttpServletResponse response) throws Exception {

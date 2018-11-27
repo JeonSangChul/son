@@ -20,6 +20,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.core.Authentication;
+
 /**
  * 
  * @author JeonPc
@@ -48,5 +50,9 @@ public interface BoardService {
 	public Map<String, Object> selectRecommend(Map<String, Object> paramMap) throws Exception;
 	
 	public void recommendSave(Map<String, Object> paramMap) throws Exception;
+	
+	public Map<String, Object> boardInsert2(Map<String, Object> paramMap, List<Map<String, Object>> fileList, Authentication auth, HttpServletRequest request) throws Exception;
+	
+	public Map<String, Object> boardUpdate2(Map<String, Object> paramMap, List<Map<String, Object>> delFileList, List<Map<String, Object>> fileList, Authentication auth, HttpServletRequest request) throws Exception;
 }
 

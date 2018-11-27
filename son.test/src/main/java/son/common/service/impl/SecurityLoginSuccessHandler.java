@@ -75,13 +75,18 @@ public class SecurityLoginSuccessHandler implements AuthenticationSuccessHandler
 			Authentication authentication) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		
+/*		Cookie cookie = new Cookie("JSESSIONID",request.getSession().getId());
+		cookie.setPath(request.getContextPath());
+		
+		response.addCookie(cookie);*/
+		
 		clearAuthenticationAttributes(request);
 		
 		int intRedirectStrategy = deciedRedirectStrategy(request, response);
 		
 		SecurityDto securityDto = (SecurityDto)authentication.getPrincipal();
-		Cookie cookie = new Cookie("loginId",securityDto.getEmail());
-		response.addCookie(cookie);
+		Cookie cookie2 = new Cookie("loginId",securityDto.getEmail());
+		response.addCookie(cookie2);
 		
 		switch (intRedirectStrategy) {
 		case 1:

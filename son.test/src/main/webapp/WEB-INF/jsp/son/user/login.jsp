@@ -18,7 +18,7 @@ $(document).ready(function (){
 
 </script>
 <div>
-	<form name="f" id="f"  method="POST" action="<c:url value='/j_spring_security_check' />">
+	<form name="f" id="f"  method="POST" action="/j_spring_security_check">
 		<input type="text" name="j_username" id="j_username" value="${loginId }" required>
 		<input type="text" name="j_password" id="j_password" value="" required>
 		

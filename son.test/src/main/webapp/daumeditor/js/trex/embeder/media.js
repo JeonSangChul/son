@@ -129,9 +129,11 @@ TrexConfig.addEmbeder(
             return "<embed src=\"" + url + "\" type=\"video/quicktime\" pluginspage=\"http://www.apple.com/quicktime/download/indext.html\" width='" + size.width + "' height='" + size.height + "'></embed>";
         },
         generateHTMLIfIframeSource: function(url, size) {
+        	debugger;
             var tvpotKey = getTvPotKey(url);
+            alert(tvpotKey);
             if (tvpotKey) {
-                return "<iframe src=\"http://videofarm.daum.net/controller/video/viewer/Video.html?play_loc=undefined&vid=" + tvpotKey + "\" width='"+size.width+"' height='"+size.height+"' frameborder=\"0\" allowfullscreen></iframe>";
+                return "<iframe src=\"https://play-tv.kakao.com/embed/player/cliplink/" + tvpotKey + "?service=kakao_tv \" width='"+size.width+"' height='"+size.height+"' frameborder=\"0\" allowfullscreen></iframe>";
             }
 
             var youtubeMovieKey = getYouTubeMovieKey(url);
@@ -275,7 +277,7 @@ TrexConfig.addEmbeder(
 	}
 		
 	function convertToHtml(content) {
-		alert("11");
+		debugger;
 		if ($tx.msie) { //NOTE: #FTDUEDTR-366 + #FTDUEDTR-372 -> #FTDUEDTR-403
             if ($tx.msie_ver < 10) {
                 content = content.replace(/<iframe[^>]*src=("|'|)https?:\/\/www\.youtube\.com\/embed\/(\w+)\1[^>]*><\/iframe>/i, function (html, quote, vid) {
@@ -403,7 +405,7 @@ TrexConfig.addEmbeder(
 	}
 	
     function getTvPotKey(url) {
-        return (url.match(/http:\/\/tvpot\.daum\.net\/v\/(.{23})/) || [])[1];
+        return (url.match(/http:\/\/tv\.kakao\.com\/v\/(?:watch\?v=)?(.+)/) || [])[1];
     }
 
     function getYouTubeMovieKey(url) {
@@ -418,7 +420,7 @@ TrexConfig.addEmbeder(
 		} else if(url.indexOf("flvs.daum.net/flvPlayer") > -1) {
 			_width = 502;
 			_height = 399;
-        } else if(url.indexOf('youtube') != -1 || url.indexOf('youtu.be') != -1 || url.indexOf('tvpot.daum.net') != -1) {
+        } else if(url.indexOf('youtube') != -1 || url.indexOf('youtu.be') != -1 || url.indexOf('tv.kakao.com') != -1) {
             var size = TrexConfig.get('size');
             if (size.contentWidth > 640) {
                 _width = 640;

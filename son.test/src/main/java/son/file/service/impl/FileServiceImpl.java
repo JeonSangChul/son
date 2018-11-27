@@ -168,6 +168,146 @@ public class FileServiceImpl extends EgovAbstractServiceImpl implements FileServ
 		return fileMapper.selectFileList(paramMap);
 	}
 
+	
+	
+	
+	@Override
+	public List<Map<String, Object>> multiImgUpload2(MultipartHttpServletRequest multipartHttpServletRequest,
+			HttpSession httpSession) throws Exception {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> fileList = new ArrayList<Map<String, Object>>();
+		Iterator<String> itr = multipartHttpServletRequest.getFileNames();
+		List<MultipartFile> attachs = new ArrayList<MultipartFile>();
+		
+		int i = 0;
+		for(MultipartFile attch : multipartHttpServletRequest.getFiles("imageFile")){
+			
+			Map<String, Object> fileInfo = new HashMap<String, Object>(); 
+			String originalName = attch.getOriginalFilename();
+			String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
+			
+			long filesize = attch.getSize(); // 파일크기 
+			long limitFileSize = 1*1024*1024; // 1MB 
+			
+			String path = propertiesService.getString("board.upload.image");
+			
+			File file = new File(path);
+			if(!file.exists()){
+				file.mkdir();
+			}
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			String today = formatter.format(new Date());
+			String modifyName = today +"-" + UUID.randomUUID().toString().substring(20)+"."+originalNameExtension;
+			
+			try{
+				attch.transferTo(new File(path+modifyName));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView2.do?fileName="+path+modifyName;
+			
+			/*fileInfo.put("originFileName", originalName);
+			fileInfo.put("storedFileName", modifyName);
+			fileInfo.put("fileSize", filesize);
+			fileInfo.put("filePath", path);
+			fileInfo.put("fileExtsn", originalNameExtension);
+			fileInfo.put("fileType", "image");
+			fileInfo.put("fileUrl", imageurl);
+			fileInfo.put("thumbUrl", imageurl);
+			
+			fileMapper.tempFileInsert(fileInfo);*/
+			
+			//파일 확장자 정보도 수정예쩡
+			fileInfo.put("url", imageurl);
+			/*fileInfo.put("imagealign", "C");
+			fileInfo.put("_s_url", imageurl);
+			fileInfo.put("result", 1);   */
+			
+			fileList.add(fileInfo);
+		}
+		return fileList;
+	}
+	
+	@Override
+	public List<Map<String, Object>> multiFileUpload2(MultipartHttpServletRequest multipartHttpServletRequest,
+			HttpSession httpSession) throws Exception {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> fileList = new ArrayList<Map<String, Object>>();
+		Iterator<String> itr = multipartHttpServletRequest.getFileNames();
+		List<MultipartFile> attachs = new ArrayList<MultipartFile>();
+		
+		int i = 0;
+		for(MultipartFile attch : multipartHttpServletRequest.getFiles("file")){
+			Map<String, Object> fileInfo = new HashMap<String, Object>(); 
+			String originalName = attch.getOriginalFilename();
+			String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
+			
+			long filesize = attch.getSize(); // 파일크기 
+			
+			String path = propertiesService.getString("board.upload.file");
+			
+			File file = new File(path);
+			if(!file.exists()){
+				file.mkdir();
+			}
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			String today = formatter.format(new Date());
+			String modifyName = today +"-" + UUID.randomUUID().toString().substring(20)+"."+originalNameExtension;
+			
+			try{
+				attch.transferTo(new File(path+modifyName));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			String imageurl = httpSession.getServletContext().getContextPath()+"/son/file/imgView.do?fileName="+modifyName+"&filePath="+path;
+			
+			fileInfo.put("originFileName", originalName);
+			fileInfo.put("storedFileName", modifyName);
+			fileInfo.put("fileSize", filesize);
+			
+			fileMapper.tempFileInsert(fileInfo);
+			
+			
+			fileList.add(fileInfo);
+		}
+		return fileList;
+	}
 
+	@Override
+	public void deleteTempFile(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		
+		
+		Map<String, Object> map = fileMapper.selectTempFile(paramMap);
+		
+		String filePath = (String) map.get("filePath");
+		String storedFileName = (String) map.get("storedFileName");
+		
+		File file = new File(filePath+storedFileName);
+		
+		if(file.exists()) file.delete();
+		
+		fileMapper.deleteTempFile(paramMap);
+	}
+
+	@Override
+	public void deleteFile(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		
+		Map<String, Object> map = fileMapper.selectFileInfo(paramMap);
+		
+		String filePath = (String) map.get("filePath");
+		String storedFileName = (String) map.get("storedFileName");
+		
+		File file = new File(filePath+storedFileName);
+		
+		if(file.exists()) file.delete();
+		
+		fileMapper.deleteFileDetail(paramMap);
+	}
 }
 

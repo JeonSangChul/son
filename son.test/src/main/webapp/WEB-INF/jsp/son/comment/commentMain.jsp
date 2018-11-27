@@ -12,7 +12,7 @@ $(document).ready(function (){
 		var param = {};
 		var commentContent = $("#commentContent").val();
 		
-		if(trim(commentContent).length == 0){
+		if($.trim(commentContent).length == 0){
 			alert("댓글 내용을 입력해 주십시오.");
 			$("#commentContent").focus();
 			return;
@@ -127,7 +127,7 @@ function fn_commentUpdate(obj){
 	var commentContentTxt = $(obj).parent().parent().parent().find("#cmtContentTxt textarea").text();
 	var param = {};
 	
-	if(trim(commentContentTxt).length == 0){
+	if($.trim(commentContentTxt).length == 0){
 		alert("댓글 내용을 입력해 주십시오.");
 		$(obj).parent().parent().parent().find("#cmtContentTxt textarea").focus();
 		return;

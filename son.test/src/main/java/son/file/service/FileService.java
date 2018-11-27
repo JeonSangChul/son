@@ -38,5 +38,13 @@ public interface FileService {
 	
 	public List<Map<String, Object>> selectFileList(Map<String, Object> paramMap) throws Exception;
 	
+	public List<Map<String, Object>> multiImgUpload2(MultipartHttpServletRequest multipartHttpServletRequest, HttpSession httpSession) throws Exception;
+	
+	public List<Map<String, Object>> multiFileUpload2(MultipartHttpServletRequest multipartHttpServletRequest, HttpSession httpSession) throws Exception;
+	
+	public void deleteTempFile(Map<String, Object> paramMap) throws Exception;
+	
+	public void deleteFile(Map<String, Object> paramMap) throws Exception;
+	
 }
 

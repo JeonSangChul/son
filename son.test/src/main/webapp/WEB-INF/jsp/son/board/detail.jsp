@@ -15,16 +15,11 @@
 		//목록화면에 조회조건들 추가 하면 그 조건들 담아서 가자..
 		//목록화면에서 페이징한거 몇 페이지인지 읽어서 가도록 해야 되나?
 		$("#btnList").click(function(){
-			var form = document.getElementById("frm")
-			form.setAttribute('action', "<c:url value='/son/board/list.do'/>"+"?boardId=${master.boardId}");
-			form.submit();
+			location.href = "<c:url value='/son/board/list.do'/>?boardId=${master.boardId}";
 		});
 
 		$("#btnModify").click(function(){
-			var form = document.getElementById("frm")
-			form.setAttribute('action', "<c:url value='/son/board/modify.do'/>"+"?boardId=${master.boardId}&idx=${result.idx}");
-			
-            form.submit();
+			location.href = "<c:url value='/son/board/modify.do'/>"+"?boardId=${master.boardId}&idx=${result.idx}";
 		 });
 		
 		$("#btnDelete").click(function(){
@@ -46,9 +41,7 @@
 		    	},
 	    		success : function(data) {
 	    			if(data.resultCd == "Success"){
-	    				var form = document.getElementById("frm")
-		    			form.setAttribute('action', "<c:url value='/son/board/list.do'/>"+"?boardId=${master.boardId}");
-		                form.submit();
+	    				location.href = "<c:url value='/son/board/list.do'/>"+"?boardId=${master.boardId}";
 	    			}else{
 	        			alert("작업중 오류가 발생했습니다.");
 	        			return false;

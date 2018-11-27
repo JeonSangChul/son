@@ -45,7 +45,7 @@ public class CommentServiceImpl extends EgovAbstractServiceImpl implements Comme
 		
 		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
 		
-		String sUserId = securityDto.getUserId();
+		int sUserId = securityDto.getUserId();
 		
 		paramMap.put("userId", sUserId);
 		paramMap.put("commentContent", CommonUtils.unscript(URLDecoder.decode((String) paramMap.get("commentContent"),"UTF-8")));
@@ -76,7 +76,7 @@ public class CommentServiceImpl extends EgovAbstractServiceImpl implements Comme
 		
 		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
 		
-		String sUserId = securityDto.getUserId();
+		int sUserId = securityDto.getUserId();
 		
 		paramMap.put("userId", sUserId);
 		

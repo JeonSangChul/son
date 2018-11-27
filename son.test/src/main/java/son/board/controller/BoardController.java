@@ -165,7 +165,7 @@ public class BoardController {
 		Map<String, Object> masterMap = boardService.selectBoardMasterInfo(paramMap);
 		model.addAttribute("master", masterMap);
 		
-		return "son/board/write";
+		return "son/board/write2";
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public class BoardController {
 		
 		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
 		
-		if(!String.valueOf(resultMap.get("userId")).equals(securityDto.getUserId())) {
+		if(securityDto.getUserId() != Integer.parseInt((String) resultMap.get("userId"))) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "게시물 수정 권한이 없습니다");
 		}else {
 			List<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
@@ -255,7 +255,7 @@ public class BoardController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
 		
-		if(!String.valueOf(paramMap.get("userId")).equals(securityDto.getUserId())) {
+		if((Integer) paramMap.get("userId") != securityDto.getUserId()) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "게시물 수정 권한이 없습니다");
 		}else {
 			map = boardService.boardUpdate(paramMap, request);
@@ -289,5 +289,56 @@ public class BoardController {
 		return map;
 	}
 	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@RequestMapping(value="/son/board/save2.do")
+	public @ResponseBody Map<String, Object> save2(ModelMap model, @RequestParam Map<String, Object> paramMap
+			, HttpServletRequest request, Authentication auth) throws Exception {
+		
+		List<Map<String, Object>> fileList = new ArrayList<Map<String, Object>>();
+		
+		if(request.getParameterValues("tempFileId") != null) {
+			String[] value =request.getParameterValues("tempFileId");
+			for (int i = 0; i < value.length; i++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tempFileId", value[i]);
+				fileList.add(map);
+			}
+		}
+		
+		Map<String, Object> map = boardService.boardInsert2(paramMap, fileList, auth, request);
+		map.put("resultCd", "Success");
+		return map;
+	}
+	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@RequestMapping(value="/son/board/update2.do")
+	public @ResponseBody Map<String, Object> update2(ModelMap model, @RequestParam Map<String, Object> paramMap
+			, HttpServletRequest request, Authentication auth) throws Exception {
+		
+		List<Map<String, Object>> fileList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> delFileList = new ArrayList<Map<String, Object>>();
+		
+		if(request.getParameterValues("tempFileId") != null) {
+			String[] value =request.getParameterValues("tempFileId");
+			for (int i = 0; i < value.length; i++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tempFileId", value[i]);
+				fileList.add(map);
+			}
+		}
+		
+		if(request.getParameterValues("imgSrno") != null) {
+			String[] value =request.getParameterValues("imgSrno");
+			for (int i = 0; i < value.length; i++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("imgSrno", value[i]);
+				delFileList.add(map);
+			}
+		}
+		
+		Map<String, Object> map = boardService.boardUpdate2(paramMap, delFileList, fileList, auth, request);
+		map.put("resultCd", "Success");
+		return map;
+	}
 	
 }

@@ -35,6 +35,7 @@ public class SecurityServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
+		
 		Map<String, Object> user = new HashMap<String, Object>();
 		try {
 			user = userMapper.slectUserInfo(username);
@@ -52,7 +53,7 @@ public class SecurityServiceImpl implements UserDetailsService {
 		loginUser = new SecurityDto(user.get("username").toString(), 
 				user.get("password").toString(), 
 				true, true, true, true, gas,
-				user.get("userId").toString(),
+				(Integer) user.get("userId"),
 				user.get("name").toString(),
 				user.get("email").toString(), 
 				user.get("authority").toString());

@@ -14,8 +14,11 @@
 
 	<security:http auto-config="true" use-expressions="true"   >
 		
+		
 		<security:intercept-url pattern="/**" access="permitAll" requires-channel="https"  />
-		<!-- <security:intercept-url pattern="/son/user/login.do" /> -->
+		 
+		
+		<!-- <security:intercept-url pattern="/**" access="permitAll" requires-channel="https"  /> -->
 		
 		<security:form-login login-page="/son/user/login.do" default-target-url="/main.do"
 			authentication-success-handler-ref="securityLoginSuccessHandler"

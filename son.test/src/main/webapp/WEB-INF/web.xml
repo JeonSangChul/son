@@ -117,4 +117,17 @@
       <location>/code500.jsp</location>
     </error-page>
 	
+	<!-- <security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Automatic SSL Forward</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint />
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint> -->
+	
 </web-app>

@@ -278,6 +278,63 @@ public class FileController {
 		}
 	}
 	
+	
+	@RequestMapping(value="/son/file/imgView2.do")
+	public void imageView(@RequestParam(value="fileName", required=false) String fileName,
+							HttpServletResponse response,
+							Model model) throws Exception {
+		File file = null;
+		FileInputStream fis = null;
+		
+		BufferedInputStream in = null;
+		ByteArrayOutputStream bStream = null;
+		try{
+			file = new File(fileName);
+			fis = new FileInputStream(file);
+			
+			in = new BufferedInputStream(fis);
+			bStream = new ByteArrayOutputStream();
+			
+			int imgByte;
+			while ((imgByte = in.read()) != -1) {
+				bStream.write(imgByte);
+			}
+			
+			//jpeg가 아니라 확장자(타입)을 받아서 변경하자.. 우선 귀찮으니 jpeg로...
+			response.setHeader("Content-Type", "image/jpeg");
+			response.setContentLength(bStream.size());
+			
+			bStream.writeTo(response.getOutputStream());
+			
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}finally{
+			if (bStream != null) {
+				try{
+					bStream.close();
+				}catch (Exception ignore){
+					LOGGER.debug("IGNORE: " + ignore.getMessage());
+				}
+			}
+			
+			if(in != null){
+				try{
+					in.close();
+				}catch (Exception ignore){
+					LOGGER.debug("IGNORE: " + ignore.getMessage());
+				}
+			}
+			
+			if(fis != null){
+				try{
+					fis.close();
+				}catch (Exception ignore){
+					LOGGER.debug("IGNORE: " + ignore.getMessage());
+				}
+			}
+		}
+	}
+	
 	/**
 	 * 첨부파일 다운로드
 	 * @param paramMap
@@ -404,4 +461,61 @@ public class FileController {
 		}
 		return "Firefox";
 	}
+	
+	@RequestMapping(value="/son/file/multiImgUpload2.do")
+	@ResponseBody
+	public Map<String, Object> multiImgUpload2(ModelMap model
+									, MultipartHttpServletRequest multipartHttpServletRequest
+									, HttpSession httpSession) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> fileList = fileService.multiImgUpload2(multipartHttpServletRequest, httpSession);
+		
+		resultMap.put("files", fileList);
+		return resultMap;
+	}
+	
+	@RequestMapping(value="/son/file/multiFileUpload2.do")
+	@ResponseBody
+	public Map<String, Object> multiFileUpload2(ModelMap model
+									, MultipartHttpServletRequest multipartHttpServletRequest
+									, HttpSession httpSession) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> fileList = fileService.multiFileUpload2(multipartHttpServletRequest, httpSession);
+		
+		resultMap.put("files", fileList);
+		return resultMap;
+	}
+	
+	@RequestMapping(value="/son/file/deleteTempFile.do")
+	@ResponseBody
+	public Map<String, Object> deleteTempFile(ModelMap model
+									, @RequestParam Map<String, Object> map
+									, HttpServletRequest request
+									, HttpSession httpSession) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		fileService.deleteTempFile(map);
+		
+		
+		resultMap.put("success", "Y");
+		return resultMap;
+	}
+	
+	@RequestMapping(value="/son/file/deleteFile.do")
+	@ResponseBody
+	public Map<String, Object> deleteFile(ModelMap model
+									, @RequestParam Map<String, Object> map
+									, HttpServletRequest request
+									, HttpSession httpSession) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		fileService.deleteFile(map);
+		
+		
+		resultMap.put("resultCd", "Success");
+		return resultMap;
+	}
+	
 }

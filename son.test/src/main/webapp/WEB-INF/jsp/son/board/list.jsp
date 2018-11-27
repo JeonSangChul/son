@@ -10,16 +10,17 @@ $(document).ready(function (){
 });
 
 function fn_search(pageNo){
-	var form = document.getElementById("listForm");
-	form.setAttribute('action', "<c:url value='/son/board/list.do?boardId=${master.boardId}&pageIndex='/>"+pageNo);
-    form.submit();
+	location.href = "<c:url value='/son/board/list.do?boardId=${master.boardId}&pageIndex='/>"+pageNo;
 }
 
 function fn_write(){
 	
-	var form = document.getElementById("listForm");
+	/* var form = document.getElementById("listForm");
+	form.setAttribute("method","GET");
 	form.setAttribute('action', "<c:url value='/son/board/write.do?boardId=${master.boardId}'/>");
-    form.submit();
+    form.submit(); */
+    
+    location.href = "<c:url value='/son/board/write.do?boardId=${master.boardId}'/>";
 }
 
 function fn_detail(idx){
@@ -57,7 +58,7 @@ function fn_detail(idx){
 			<c:forEach var="result" items="${resultList}" varStatus="status">
 				<tr>
 					<td class="no"><c:out value="${result.idx }"></c:out> </td>
-					<td class="tit"><a href="javascript:fn_detail('${result.idx }');"><c:out value="${result.title }"></c:out></a> </td>
+					<td class="tit"><a href="<c:url value='/son/board/detail.do?boardId=${master.boardId}&idx=${result.idx }'/>"><c:out value="${result.title }"></c:out></a> </td>
 					<td class="tit"><c:out value="${result.userName }"></c:out> </td>
 					<td class="date"><c:out value="${result.createDt }"></c:out> </td>
 					<td class="no"><c:out value="${result.viewCnt }"></c:out> </td>

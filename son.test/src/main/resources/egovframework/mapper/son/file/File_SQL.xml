@@ -163,4 +163,15 @@
     		   AND img_id = #{imgId}
     	]]>
     </delete>
+    
+     <select id="selectTempFile" parameterType="paramMap" resultType="egovMap">
+        <![CDATA[
+        	SELECT t1.file_path
+        		  ,t1.stored_file_name
+        	  FROM temp_file t1
+        	 WHERE 1=1
+        	   and t1.temp_file_id = #{tempFileId}
+        ]]>
+    </select>
+    
 </mapper>

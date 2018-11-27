@@ -114,6 +114,7 @@ Trex.Embeder = Trex.Class.draft({
 		return new Trex.EmbedEntry[_embeddedItemType.capitalize()](this, data);
 	},
 	execAttach: function(data) {
+		debugger;
 		var _pastescope = this.pastescope;
 		var _html = this.getCreatedHtml(data);
 		var _style = this.config.parastyle || this.config.defaultstyle || {};

@@ -30,7 +30,7 @@ public class SecurityDto extends User{
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
 
-	String userId;
+	int userId;
 	String name;
 	String email;
 	String roleId;
@@ -45,7 +45,7 @@ public class SecurityDto extends User{
 	public SecurityDto(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
 			Collection<? extends GrantedAuthority> authorities,
-			String userId,
+			int userId,
 			String name, String email, String roleId) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		
@@ -66,11 +66,11 @@ public class SecurityDto extends User{
 		this.name = name;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 

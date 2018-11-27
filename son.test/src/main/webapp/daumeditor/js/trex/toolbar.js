@@ -128,17 +128,17 @@ Trex.module("bind events with tools",
 			var isMobile, name, tool, btn;
 			isMobile = $tx.ios || $tx.android;
 			if (!isMobile) {
-				return;
+				//return;
 			}
 			for (name in _tools) {
 				tool = _tools[name];
 				if (tool.disabledonmobile) {
 					btn = tool.button;
-					btn.disable();
+					//btn.disable();
 				}
 			}
 		};
-		disableToolOnMobile();
+		//disableToolOnMobile();
 		
 		var _changeMode = function(from, to){
 			if (from == to) {
@@ -157,7 +157,7 @@ Trex.module("bind events with tools",
 					}
 				}
 			}
-			disableToolOnMobile();
+			//disableToolOnMobile();
 		};
 		canvas.observeJob(Trex.Ev.__CANVAS_MODE_CHANGE, _changeMode);
 		canvas.observeJob(Trex.Ev.__CANVAS_MODE_INITIALIZE, _changeMode);
@@ -289,7 +289,7 @@ Trex.Tool = Trex.Class.draft(/** @lends Trex.Tool.prototype */{
 		this.wysiwygonly = ((config.wysiwygonly != _NULL)? config.wysiwygonly: _TRUE);
 		this.menuFoldAuto = ((config.menuFoldAuto != _NULL)? config.menuFoldAuto: _TRUE);
 		if (config.disabledonmobile != _NULL) {
-			this.disabledonmobile = config.disabledonmobile;
+			this.disabledonmobile = false;
 		}
 		
 		/** 

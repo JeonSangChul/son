@@ -55,7 +55,7 @@
 			
 			     size: {
 			         /* 지정된 본문영역의 넓이가 있을 경우에 설정 */
-			         //contentWidth: 1000 
+			         contentWidth: 1000 
 			     }
 			
 			 };
@@ -71,9 +71,7 @@
 		    });
 		 
 		$("#btnCancle").click(function(){
-			var form = document.getElementById("frm")
-			form.setAttribute('action', "<c:url value='/son/board/list.do?boardId=${master.boardId}'/>");
-			form.submit();
+			location.href = "<c:url value='/son/board/list.do?boardId=${master.boardId}'/>";
 		});
 	 });
     //form submit 버튼 클릭
@@ -172,12 +170,7 @@ function setForm() {
     	success : function(data) {
     		
     		if(data.resultCd == "Success"){
-    			var form = document.createElement("form");
-        		form.setAttribute('method', "POST");
-        		form.setAttribute('action', "<c:url value='/son/board/detail.do?boardId=${master.boardId}&idx='/>"+data.idx);
-        		form.target ="_self";
-        		document.body.appendChild(form);
-    			form.submit();
+    			location.href ="<c:url value='/son/board/detail.do?boardId=${master.boardId}&idx='/>"+data.idx;
     		}else{
     			alert("작업중 오류가 발생했습니다.");
     			return false;
@@ -214,7 +207,7 @@ function setForm() {
     </dl>
     
     <div class="btnArea">
-		<button type="button" id ="btnCancle" class="btnW btnCancle">취소하기</button>
+		<button type="button" id ="btnCancle" class="btnW btnCancle" >취소하기</button>
 		<button type="button" id="save_button" name="save_button">등록하기</button>
 	</div>
 	</form>

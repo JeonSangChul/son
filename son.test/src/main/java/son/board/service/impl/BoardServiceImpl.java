@@ -73,7 +73,7 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		
 		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
 		
-		String sUserId = securityDto.getUserId();
+		int sUserId = securityDto.getUserId();
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(paramMap.get("frmData") != null) {
@@ -265,6 +265,102 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 			}
 		}
 		
+	}
+
+	@Override
+	public Map<String, Object> boardInsert2(Map<String, Object> paramMap, List<Map<String, Object>> fileList, 
+			Authentication auth,
+			HttpServletRequest request) throws Exception {
+		// TODO Auto-generated method stub
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
+		int sUserId = securityDto.getUserId();
+		String userIp = CommonUtils.getUserIp(request);
+		
+		paramMap.put("userId", sUserId);
+		paramMap.put("userIp", userIp);
+		
+		
+		if(fileList.size() >0) {
+			fileMapper.fileInsert(paramMap);
+		}
+		for(Map<String, Object> fileMap : fileList) {
+			fileMap.put("imgId", paramMap.get("imgId"));
+			fileMapper.insertFileDetail(fileMap);
+			fileMapper.deleteTempFile(fileMap);
+		}
+		
+		paramMap.put("content", CommonUtils.unscript(URLDecoder.decode((String) paramMap.get("content"),"UTF-8")));
+		paramMap.put("title", CommonUtils.unscript((String) paramMap.get("title")));
+		
+		boardMapper.boardInsert(paramMap);
+		
+		resultMap.put("idx", paramMap.get("idx"));
+		
+		return resultMap;
+	}
+
+	@Override
+	public Map<String, Object> boardUpdate2(Map<String, Object> paramMap, List<Map<String, Object>> delFileList,
+			List<Map<String, Object>> fileList, Authentication auth, HttpServletRequest request) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		SecurityDto securityDto = (SecurityDto)auth.getPrincipal();
+		int sUserId = securityDto.getUserId();
+		String userIp = CommonUtils.getUserIp(request);
+		
+		paramMap.put("userId", sUserId);
+		paramMap.put("userIp", userIp);
+		
+		for(Map<String, Object> delFileMap : delFileList) {
+			delFileMap.put("imgId", paramMap.get("imgId"));
+			
+			Map<String, Object> map = fileMapper.selectFileInfo(delFileMap);
+			
+			String filePath = (String) map.get("filePath");
+			String storedFileName = (String) map.get("storedFileName");
+			
+			File file = new File(filePath+storedFileName);
+			
+			if(file.exists()) file.delete();
+			
+			fileMapper.deleteFileDetail(delFileMap);
+		}
+		
+		if(fileList.size() >0) {
+			if(paramMap.get("imgId") == null || "".equals(paramMap.get("imgId"))) {
+				fileMapper.fileInsert(paramMap);
+			}
+		}
+		
+		for(Map<String, Object> fileMap : fileList) {
+			fileMap.put("imgId", paramMap.get("imgId"));
+			fileMapper.insertFileDetail(fileMap);
+			fileMapper.deleteTempFile(fileMap);
+		}
+		
+		if(!"".equals(String.valueOf(paramMap.get("imgId")))) {
+			int fileCnt = fileMapper.selectFileCnt(paramMap);
+			
+			if(fileCnt == 0) {
+				fileMapper.deleteFile(paramMap);
+				paramMap.put("imgId", null);
+			}
+		}
+		
+		
+		paramMap.put("content", CommonUtils.unscript(URLDecoder.decode((String) paramMap.get("content"),"UTF-8")));
+		paramMap.put("title", CommonUtils.unscript((String) paramMap.get("title")));
+		
+		boardMapper.boardUpdate(paramMap);
+		
+		resultMap.put("idx", paramMap.get("idx"));
+		resultMap.put("boardId", paramMap.get("boardId"));
+		
+		return resultMap;
 	}
 
 

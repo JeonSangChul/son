@@ -48,4 +48,7 @@ public interface FileMapper {
 	
 	public void deleteAllFileDetail(Map<String, Object> paramMap) throws Exception;
 	
+	public Map<String, Object> selectTempFile(Map<String, Object> paramMap) throws Exception;
+	
+	
 }
